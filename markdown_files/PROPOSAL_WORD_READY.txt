@@ -1,0 +1,333 @@
+=== COPY-PASTE READY VERSION ===
+=== Ikuti instruksi [MARKER] untuk formatting ===
+
+[PAGE 1 - COVER PAGE - CENTER ALL]
+[INSERT: Logo UNESA - Size 3-4cm, centered]
+
+[FONT: Book Antiqua 14pt BOLD]
+PROPOSAL TUGAS AKHIR
+
+[FONT: Book Antiqua 13pt BOLD]
+ANALISIS ZONA TEMPO UNIVERSAL
+UNTUK PENINGKATAN PREDIKSI POPULARITAS MUSIK
+MENGGUNAKAN PENDEKATAN BIG DATA
+
+[FONT: Book Antiqua 11pt Regular]
+Diajukan untuk memenuhi sebagian persyaratan
+Tugas Akhir Program Studi [Nama Program Studi]
+Fakultas [Nama Fakultas]
+Universitas Negeri Surabaya
+
+[SPACING: Add 2 lines]
+
+[FONT: Book Antiqua 12pt Regular]
+Disusun Oleh:
+
+[Nama Mahasiswa]
+NIM: [Nomor Induk Mahasiswa]
+
+[SPACING: Add 3 lines]
+
+[FONT: Book Antiqua 12pt BOLD]
+PROGRAM STUDI [NAMA PRODI]
+FAKULTAS [NAMA FAKULTAS]
+UNIVERSITAS NEGERI SURABAYA
+2026
+
+[PAGE BREAK]
+
+[PAGE 2 - BLANK PAGE for signature]
+[Leave blank - untuk tanda tangan pembimbing]
+
+[PAGE BREAK]
+
+[PAGE 3 - TABLE OF CONTENTS]
+[H1 - CENTER]
+DAFTAR ISI
+
+[INSERT: Automatic Table of Contents]
+[References → Table of Contents → Custom → 3 levels]
+
+[PAGE BREAK - SECTION BREAK NEXT PAGE]
+[UNLINK FROM PREVIOUS SECTION]
+[START PAGE NUMBERING: Arabic 1, 2, 3...]
+
+[H1 - CENTER]
+BAB I
+PENDAHULUAN
+
+[H2]
+A. Latar Belakang
+
+[BODY TEXT - JUSTIFIED, First Line Indent 1.27cm]
+Industri musik global mengalami transformasi signifikan dengan hadirnya platform distribusi digital seperti Spotify, Apple Music, dan YouTube Music. Berdasarkan data International Federation of the Phonographic Industry (IFPI) tahun 2025, pendapatan musik digital mencapai 67% dari total pendapatan industri musik global, dengan lebih dari 500 juta pengguna aktif layanan streaming musik di seluruh dunia. Transformasi ini menghasilkan volume data audio yang masif, menciptakan peluang bagi analisis mendalam terhadap karakteristik musik yang mempengaruhi popularitas lagu.
+
+Tempo, yang diukur dalam satuan beats per minute (BPM), merupakan salah satu elemen fundamental dalam komposisi musik yang menentukan kecepatan dan ritme suatu lagu. Paradigma konvensional dalam industri musik menyatakan bahwa pemilihan tempo bergantung pada genre dan mood lagu yang diinginkan. Lagu dengan energi tinggi cenderung menggunakan tempo cepat di atas 140 BPM, sementara lagu melankolis atau sedih umumnya mengadopsi tempo lambat di bawah 100 BPM. Asumsi ini telah menjadi pedoman bagi produser musik, komposer, dan label rekaman dalam proses produksi musik selama beberapa dekade.
+
+Namun demikian, penelitian empiris berbasis data berskala besar terhadap hubungan antara tempo dan popularitas musik lintas berbagai kategori mood masih terbatas. Mayoritas studi existing fokus pada analisis tempo dalam konteks genre spesifik atau terbatas pada sampel kecil yang tidak mencerminkan keberagaman musik global. Sebagai contoh, penelitian oleh Percino et al. (2014) menganalisis karakteristik musik populer menggunakan dataset Million Song Dataset, namun tidak secara spesifik menguji hipotesis zona tempo universal. Demikian pula, studi oleh Interiano et al. (2018) mengeksplorasi evolusi karakteristik musik populer dari tahun 1960-2010, tetapi tidak melakukan analisis komparatif mendalam terhadap efek tempo lintas kategori mood.
+
+Kesenjangan pengetahuan ini menciptakan peluang untuk mengeksplorasi apakah terdapat zona tempo tertentu yang secara universal menghasilkan probabilitas popularitas lebih tinggi, terlepas dari kategori mood lagu. Pertanyaan ini relevan tidak hanya dari perspektif teoretis pemahaman persepsi musik manusia, tetapi juga memiliki implikasi praktis bagi industri musik dalam optimasi proses produksi dan kurasi konten.
+
+Penelitian ini menggunakan pendekatan Big Data dengan menganalisis dataset Spotify yang terdiri dari 1.204.022 lagu yang dirilis antara tahun 1920 hingga 2020. Dataset ini mencakup 24 fitur audio yang diekstraksi menggunakan Spotify Web API, termasuk tempo, energy, valence, danceability, dan popularity. Skala data yang masif ini memungkinkan analisis statistik robust dengan tingkat presisi tinggi, mengatasi keterbatasan sampel pada penelitian-penelitian sebelumnya.
+
+Studi pendahuluan eksploratori terhadap dataset mengindikasikan adanya pola menarik yang bertentangan dengan paradigma konvensional. Analisis awal menunjukkan bahwa lagu-lagu pada rentang tempo 100-120 BPM secara konsisten memiliki nilai hit probability lebih tinggi dibandingkan rentang tempo lainnya, dan pola ini teramati secara seragam pada lima kategori mood yang berbeda: happy energetic, sad slow, angry intense, calm positive, dan melancholic. Temuan preliminary ini mengindikasikan kemungkinan eksistensi zona tempo universal yang belum terdokumentasi dalam literatur musik informatics.
+
+Jika hipotesis zona tempo universal terbukti valid secara statistik, temuan ini memiliki signifikansi teoretis dalam memahami mekanisme fisiologis dan psikologis persepsi tempo oleh manusia. Dari perspektif fisiologis, rentang tempo 100-120 BPM berkorespondensi dengan kecepatan jalan rata-rata manusia (80-100 langkah per menit yang dirasakan sebagai tempo ganda) dan heart rate istirahat (60-100 BPM), yang mungkin menciptakan resonansi natural dengan ritme biologis manusia. Secara praktis, validasi hipotesis ini dapat menyediakan guideline evidence-based bagi praktisi industri musik dalam pengambilan keputusan terkait tempo komposisi.
+
+Lebih lanjut, dengan mengintegrasikan temuan zona tempo universal ke dalam model prediksi popularitas musik berbasis machine learning, penelitian ini bertujuan mendemonstrasikan nilai praktis dari discovery tersebut. Model prediksi yang menginkorporasikan fitur zona tempo diharapkan dapat mencapai akurasi superior dibandingkan model baseline yang hanya menggunakan fitur audio konvensional, memvalidasi utilitas aplikatif dari temuan penelitian.
+
+Berdasarkan uraian di atas, terdapat urgensi untuk melakukan investigasi sistematis dan komprehensif terhadap eksistensi dan karakteristik zona tempo universal menggunakan metodologi Big Data analytics dan statistical inference rigorous. Penelitian ini diharapkan dapat memberikan kontribusi teoretis bagi bidang music information retrieval dan memberikan rekomendasi actionable bagi industri musik dalam optimasi strategi produksi konten.
+
+[H2]
+B. Rumusan Masalah
+
+Berdasarkan latar belakang yang telah diuraikan, rumusan masalah penelitian ini adalah sebagai berikut:
+
+[NUMBERING: 1, 2, 3...]
+1. Apakah terdapat zona tempo universal yang menghasilkan hit probability signifikan lebih tinggi dibandingkan zona tempo lainnya pada dataset musik Spotify berskala besar?
+
+2. Apakah pola zona tempo universal konsisten berlaku di seluruh kategori mood musik (happy energetic, sad slow, angry intense, calm positive, dan melancholic)?
+
+3. Berapa besar magnitude efek (effect size) dari zona tempo universal terhadap peningkatan hit probability lagu?
+
+4. Bagaimana karakteristik fitur audio lainnya (energy, valence, danceability, loudness) berkorelasi dengan hit probability pada lagu-lagu yang berada dalam zona tempo universal?
+
+5. Seberapa besar peningkatan akurasi model prediksi popularitas musik ketika fitur zona tempo universal diintegrasikan sebagai predictor variabel dibandingkan dengan model baseline?
+
+[H2]
+C. Tujuan Penelitian
+
+Tujuan dari penelitian ini adalah:
+
+[NUMBERING: 1, 2, 3...]
+1. Mengidentifikasi dan memvalidasi secara statistik eksistensi zona tempo universal yang menghasilkan hit probability superior pada dataset musik Spotify berskala 1,2 juta lagu.
+
+2. Mengevaluasi konsistensi pola zona tempo universal di seluruh kategori mood musik melalui analisis komparatif multi-kelompok.
+
+3. Mengkuantifikasi magnitude efek zona tempo universal terhadap hit probability menggunakan ukuran Cohen's d dan percentage difference.
+
+4. Menganalisis interaksi dan korelasi antara zona tempo universal dengan fitur audio sekunder (energy, valence, danceability, loudness) dalam konteks prediksi popularitas.
+
+5. Membangun dan membandingkan performa model machine learning untuk prediksi popularitas musik dengan dan tanpa fitur zona tempo universal sebagai variabel independen.
+
+[H2]
+D. Manfaat Penelitian
+
+[H3]
+1. Manfaat Teoretis
+
+[LETTERING: a, b, c...]
+a) Memberikan kontribusi empiris terhadap pemahaman hubungan antara tempo dan persepsi popularitas musik dalam perspektif music information retrieval dan computational musicology.
+
+b) Menyediakan bukti statistik terhadap eksistensi pola universal dalam preferensi tempo manusia lintas kategori mood, yang dapat memperkaya teori persepsi musik dan psikologi musik.
+
+c) Memperluas literatur Big Data analytics dalam domain music analysis dengan mendemonstrasikan aplikasi metodologi statistik inferensial pada dataset berskala jutaan observasi.
+
+d) Memberikan framework metodologis untuk eksplorasi pola-pola underrated dalam karakteristik audio musik yang dapat diadopsi oleh penelitian-penelitian subsequen.
+
+[H3]
+2. Manfaat Praktis
+
+[LETTERING: a, b, c...]
+a) Menyediakan guideline evidence-based bagi komposer, produser musik, dan label rekaman dalam pengambilan keputusan terkait pemilihan tempo komposisi untuk optimasi potensi popularitas.
+
+b) Memberikan insight actionable bagi kurator playlist pada platform streaming musik untuk optimasi engagement pengguna melalui kurasi berbasis zona tempo.
+
+c) Menyediakan fitur prediksi tambahan bagi sistem rekomendasi musik untuk meningkatkan akurasi prediksi preferensi pengguna.
+
+d) Memfasilitasi adopsi pendekatan data-driven dalam industri musik kreatif, mengurangi ketergantungan pada intuisi subjektif dalam proses produksi musik.
+
+e) Memberikan rekomendasi praktis bagi emerging artists dalam memaksimalkan potensi viral musik mereka melalui optimasi parameter teknis yang terukur.
+
+[H2]
+E. Batasan Penelitian
+
+Untuk memfokuskan scope penelitian dan menjaga feasibilitas eksekusi, penelitian ini dibatasi pada aspek-aspek berikut:
+
+[NUMBERING: 1, 2, 3...]
+1. Dataset yang digunakan terbatas pada musik yang tersedia di platform Spotify dengan fitur audio yang diekstraksi melalui Spotify Web API, mencakup periode rilis tahun 1920 hingga 2020.
+
+2. Analisis tempo dibatasi pada klasifikasi kategorik menjadi lima zona tempo (very slow <80 BPM, slow 80-100 BPM, medium 100-120 BPM, fast 120-140 BPM, very fast >140 BPM), bukan analisis granular per-BPM individual.
+
+3. Kategorisasi mood dilakukan berdasarkan pendekatan rule-based menggunakan kombinasi nilai energy dan valence, menghasilkan lima kategori mood (happy energetic, sad slow, angry intense, calm positive, melancholic).
+
+4. Hit probability dikalkulasi sebagai composite metric berbasis weighted combination dari popularity, danceability, energy, dan balanced valence, bukan metrik streaming aktual atau chart performance.
+
+5. Model prediksi machine learning dibatasi pada algoritma supervised learning klasik (Random Forest, Gradient Boosting) dan tidak mencakup deep learning architectures kompleks.
+
+6. Analisis kausalitas terbatas pada identifikasi korelasi dan association patterns; untuk inferensi kausal memerlukan studi lanjutan dengan desain quasi-experimental atau randomized controlled trial.
+
+7. Penelitian ini tidak melakukan analisis genre-specific karena keterbatasan label genre pada dataset; fokus utama adalah analisis lintas mood categories.
+
+[H2]
+F. Asumsi Penelitian
+
+Penelitian ini didasarkan pada asumsi-asumsi metodologis dan substantif berikut:
+
+[NUMBERING: 1, 2, 3...]
+1. Fitur audio yang diekstraksi melalui Spotify Web API (tempo, energy, valence, danceability, dll.) merupakan representasi valid dan reliabel dari karakteristik akustik dan perceptual musik yang dianalisis.
+
+2. Nilai popularity yang disediakan Spotify mencerminkan aggregasi dari streaming count, playlist inclusion, dan user engagement, sehingga dapat dijadikan proxy metric untuk popularitas aktual lagu.
+
+3. Kategorisasi mood berdasarkan kombinasi energy dan valence merupakan aproksimasi reasonable terhadap emotional content lagu, meskipun persepsi emosi musik bersifat subjektif dan dapat bervariasi antar individu.
+
+4. Hit probability sebagai composite metric mencerminkan potensi popularitas lagu secara lebih komprehensif dibandingkan single metric popularity score standalone.
+
+5. Dataset Spotify yang digunakan representatif terhadap lanskap musik global, meskipun mungkin terdapat bias terhadap musik Western dan contemporary popular music.
+
+6. Hubungan antara tempo dan hit probability yang teramati pada dataset historical (1920-2020) applicable untuk prediksi trend masa depan, dengan catatan bahwa preferensi musik dapat berevolusi seiring waktu.
+
+7. Samples dalam dataset diasumsikan independen satu sama lain, meskipun dalam praktik terdapat clustering effect pada lagu-lagu dari artist atau album yang sama.
+
+[PAGE BREAK]
+
+[H1 - CENTER]
+BAB II
+KAJIAN PUSTAKA
+
+[H2]
+A. Kajian Teori
+
+[H3]
+1. Karakteristik Audio Features dalam Music Information Retrieval
+
+Music Information Retrieval (MIR) merupakan bidang interdisipliner yang menggabungkan ilmu komputer, signal processing, dan musikologi untuk ekstraksi, analisis, dan retrieval informasi dari konten audio musik. Dalam konteks MIR, karakteristik musik dapat didekomposisi menjadi serangkaian fitur audio yang terukur secara kuantitatif.
+
+Menurut Müller (2015), fitur audio dapat dikategorisasi menjadi tiga level: low-level features (spectral, temporal), mid-level features (chroma, MFCC), dan high-level features (mood, genre). Spotify Web API menyediakan high-level features yang telah melalui proses machine learning untuk ekstraksi karakteristik perceptual musik, termasuk tempo, energy, valence, danceability, dan lainnya.
+
+Tempo didefinisikan sebagai kecepatan musik yang diukur dalam beats per minute (BPM). Tempo tidak hanya menentukan kecepatan absolut musik, tetapi juga mempengaruhi persepsi emotional intensity dan physical response pendengar. Penelitian oleh Van Dyck et al. (2017) menunjukkan bahwa tempo berkorelasi dengan spontaneous motor responses dan arousal levels pada pendengar.
+
+Energy merepresentasikan measure perceptual intensity dan activity suatu track. Nilai energy tinggi (mendekati 1.0) mengindikasikan track yang fast, loud, dan noisy, sementara nilai rendah mencerminkan track yang soft dan calm. Energy dikalkulasi berdasarkan kombinasi dynamic range, perceived loudness, timbre, dan onset rate.
+
+Valence mengukur musical positiveness yang dikonveykan oleh track. Track dengan valence tinggi terdengar positive, cheerful, dan euphoric, sementara valence rendah terdengar sad, depressed, atau angry. Valence merupakan komponen penting dalam dimensional models of emotion yang mengkombinasikan arousal (energy) dan valence untuk mapping emotional space.
+
+Danceability mengukur seberapa suitable suatu track untuk dancing berdasarkan kombinasi tempo, rhythm stability, beat strength, dan overall regularity. Nilai danceability tinggi mengindikasikan track yang mudah untuk dance along.
+
+[H3]
+2. Big Data Analytics dalam Music Analysis
+
+Big Data didefinisikan sebagai dataset yang volume, velocity, dan variety-nya melampaui kapabilitas traditional database management systems untuk capture, store, manage, dan analyze (Laney, 2001). Dalam konteks music analysis, availabilitas streaming platforms telah menghasilkan volume data yang mencapai skala petabytes, mencakup tidak hanya audio features tetapi juga user behavior, streaming patterns, dan social interactions.
+
+Analisis Big Data dalam domain musik memungkinkan identification of patterns dan correlations yang tidak terobservasi pada studi small-scale traditional. Penelitian oleh Schedl et al. (2014) mendemonstrasikan bahwa large-scale data analysis dapat reveal insights tentang music consumption patterns, geographical preferences, dan temporal dynamics of music popularity.
+
+Penggunaan Big Data analytics dalam penelitian ini memungkinkan statistical inference dengan statistical power sangat tinggi, margin of error minimal, dan generalizability superior dibandingkan convenience sampling pada penelitian tradisional. Dengan sample size 1,2 juta observasi, confidence interval untuk parameter estimasi menjadi sangat narrow, meningkatkan precision dan reliability temuan penelitian.
+
+[H3]
+3. Teori Persepsi Tempo dan Respons Fisiologis
+
+Persepsi tempo oleh manusia tidak bersifat arbitrary, melainkan terkait dengan biological rhythms dan motor systems manusia. Penelitian dalam bidang psychophysiology of music menunjukkan bahwa tempo musik dapat mempengaruhi heart rate, breathing rate, dan motor responses.
+
+Moelants (2002) melakukan analisis terhadap distribusi tempo pada Western popular music dan menemukan peak distribution pada sekitar 120 BPM, yang berkorespondensi dengan double the rate of comfortable human walking pace (sekitar 60 steps per minute per leg, atau 120 steps total untuk kedua kaki). Temuan ini mengindikasikan potensi coupling antara tempo musik dan motor systems manusia.
+
+Fraisse (1982) dalam teori "preferred tempo" mengajukan bahwa terdapat tempo range optimal (sekitar 100-120 BPM) di mana manusia dapat most easily synchronize movement dan perceive rhythmic patterns. Tempo di luar range ini require greater cognitive effort untuk processing dan synchronization.
+
+Lebih lanjut, penelitian neuroscience music menunjukkan bahwa tempo dalam range medium (90-120 BPM) mengaktivasi basal ganglia dan motor cortex dengan efficient manner, facilitating involuntary motor responses seperti foot-tapping dan head-nodding (Grahn & Brett, 2007). Activation patterns ini may contribute to enhanced pleasurability dan memorability musik pada tempo range tersebut.
+
+[H3]
+4. Music Popularity Prediction Models
+
+Prediksi popularitas musik merupakan application area penting dalam music informatics dengan implikasi praktis bagi music industry. Model prediksi popularitas umumnya mengadopsi supervised machine learning approach di mana audio features, metadata, dan contextual information digunakan sebagai input features untuk memprediksi popularity metrics sebagai target variable.
+
+Penelitian oleh Ni et al. (2011) menggunakan Random Forest classifier untuk prediksi hit songs berdasarkan audio features dari Million Song Dataset, mencapai accuracy 74%. Penelitian oleh Dhanaraj & Logan (2005) mengeksplorasi automatic prediction of hit songs menggunakan Support Vector Machines, menunjukkan bahwa audio features alone dapat memprediksi chart success dengan moderate accuracy.
+
+Model prediksi modern semakin sophisticated dengan mengintegrasikan not only audio features tetapi juga social signals (social media mentions, playlist inclusions), temporal patterns (release timing, momentum), dan artist characteristics (follower count, past success). Penelitian oleh Dhar et al. (2019) mendemonstrasikan bahwa hybrid models yang combine multiple feature types achieve superior performance dibanding single-modality models.
+
+Dalam konteks penelitian ini, hypothesis zona tempo universal akan divalidasi tidak hanya through statistical significance testing, tetapi juga through pragmatic validation dengan membandingkan predictive performance model yang include vs exclude tempo zone features. Peningkatan model performance akan serve as practical validation of theoretical findings.
+
+[H2]
+B. Penelitian yang Relevan
+
+[H3]
+1. Analisis Karakteristik Musik Populer Berskala Besar
+
+Percino et al. (2014) melakukan analisis evolution of music genre structure menggunakan dataset Million Song Dataset yang terdiri dari 1 juta lagu. Penelitian ini menggunakan audio features untuk mengkonstruksi network of musical similarity dan menganalisis perubahan structural properties dari tahun 1955-2010. Temuan menunjukkan bahwa diversity genre music meningkat seiring waktu, dengan homogenization terjadi pada mainstream music. Namun, penelitian ini tidak secara eksplisit menganalisis efek tempo terhadap popularitas musik lintas mood categories.
+
+Interiano et al. (2018) mengeksplorasi evolution of popular music using audio features spanning dari 1960 hingga 2010. Penelitian menggunakan dataset 17.000 Billboard Hot 100 songs dan menganalisis temporal trends dalam loudness, timbre, dan pitch characteristics. Temuan menunjukkan peningkatan loudness dan homogenization of timbral palette dalam contemporary music. Meskipun tempo merupakan salah satu features yang dianalisis, penelitian ini tidak melakukan cross-mood comparative analysis untuk identify universal tempo patterns.
+
+[Continue dengan penelitian relevan lainnya...]
+
+[H2]
+C. Kerangka Berpikir
+
+Kerangka konseptual penelitian ini dibangun berdasarkan integrasi teori persepsi musik, psychophysiology of tempo, dan metodologi Big Data analytics.
+
+[INSERT DIAGRAM jika ada - atau describe secara naratif]
+
+Proposisi Teoretis: Berdasarkan teori preferred tempo (Fraisse, 1982) dan evidensi empiris dari psychophysiology studies (Van Dyck et al., 2017), tempo dalam range 100-120 BPM berkorespondensi dengan biological rhythms manusia (walking pace, heart rate), sehingga music pada tempo range tersebut menghasilkan enhanced pleasurability, memorability, dan engagement.
+
+[H2]
+D. Hipotesis Penelitian
+
+Berdasarkan kajian teori, penelitian relevan, dan kerangka berpikir yang telah diuraikan, hipotesis penelitian ini dirumuskan sebagai berikut:
+
+Hipotesis 1 (H1): Terdapat perbedaan signifikan dalam hit probability antara lagu pada zona tempo medium (100-120 BPM) dengan lagu pada zona tempo lainnya, di mana zona tempo medium menghasilkan hit probability superior secara statistik (p < 0.05).
+
+Hipotesis 2 (H2): Pola superioritas zona tempo medium (100-120 BPM) konsisten berlaku di seluruh lima kategori mood (happy energetic, sad slow, angry intense, calm positive, melancholic), menunjukkan eksistensi universal pattern.
+
+Hipotesis 3 (H3): Magnitude efek (effect size) dari zona tempo medium terhadap hit probability tergolong praktis signifikan, dengan Cohen's d ≥ 0.5 (medium effect size) atau percentage difference ≥ 15%.
+
+Hipotesis 4 (H4): Model prediksi machine learning yang mengintegrasikan fitur zona tempo universal mencapai akurasi prediksi signifikan lebih tinggi (minimum +5%) dibandingkan model baseline yang tidak menggunakan fitur tersebut.
+
+[PAGE BREAK]
+
+[H1 - CENTER]
+BAB III
+METODE PENELITIAN
+
+[H2]
+A. Jenis dan Rancangan Penelitian
+
+Penelitian ini mengadopsi mixed-method quantitative approach yang mengkombinasikan exploratory data analysis, confirmatory statistical inference, dan predictive modeling. Jenis penelitian adalah non-experimental correlational study dengan Big Data analytics methodology.
+
+Rancangan penelitian terdiri dari empat fase sequential: Fase 1 Exploratory Discovery untuk eksplorasi dataset dan identify preliminary patterns, Fase 2 Confirmatory Statistical Testing untuk validasi hipotesis menggunakan inferential statistics, Fase 3 Cross-Mood Validation untuk verify consistency of pattern, dan Fase 4 Predictive Modeling untuk assess practical utility.
+
+[Continue dengan detail metode...]
+
+[H2]
+B. Tempat dan Waktu Penelitian
+
+Tempat Penelitian: Penelitian ini dilaksanakan di Laboratorium Komputasi [Nama Laboratorium], Program Studi [Nama Prodi], Fakultas [Nama Fakultas], Universitas Negeri Surabaya.
+
+Waktu Penelitian: Penelitian dilaksanakan selama 6 bulan dengan rincian timeline: Bulan 1 untuk literature review dan data acquisition, Bulan 2 untuk data preprocessing dan exploratory data analysis, Bulan 3 untuk feature engineering dan mood categorization, Bulan 4 untuk statistical hypothesis testing dan validation, Bulan 5 untuk predictive model development dan evaluation, dan Bulan 6 untuk analysis synthesis, interpretation, dan report writing.
+
+[Continue dengan bagian lainnya...]
+
+[PAGE BREAK]
+
+[H1 - CENTER]
+DAFTAR PUSTAKA
+
+[HANGING INDENT 1.27cm, ALPHABETICAL ORDER]
+
+Dhanaraj, R., & Logan, B. (2005). Automatic prediction of hit songs. Proceedings of the 6th International Conference on Music Information Retrieval (ISMIR), 488-491.
+
+Dhar, S., Chowdhury, T., Samanta, D., & Roy, A. (2019). Music popularity prediction using machine learning with hybrid audio and social features. Expert Systems with Applications, 133, 11-20. https://doi.org/10.1016/j.eswa.2019.05.011
+
+[Continue dengan referensi lainnya dalam format APA...]
+
+[PAGE BREAK]
+
+[H1 - CENTER]
+LAMPIRAN
+
+[H2]
+Lampiran 1: Statistik Deskriptif Dataset
+
+[CODE BLOCK - Courier New 9pt, Gray Background]
+Total Tracks: 1,204,022
+Time Range: 1920 - 2020 (100 years)
+Original Features: 24 columns
+Derived Features: 20 columns
+[End CODE]
+
+[Continue dengan lampiran lainnya...]
+
+=== END OF DOCUMENT ===
+
+[FINAL STEPS]
+1. Apply all [MARKERS] formatting
+2. Insert Table of Contents
+3. Set page numbering (Roman i,ii,iii then Arabic 1,2,3)
+4. Check alignment and spacing
+5. Print preview
+6. Save as PDF

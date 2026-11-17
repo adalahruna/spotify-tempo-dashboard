@@ -1,0 +1,106 @@
+{
+  "decade_data": [
+    {
+      "decade": 1920,
+      "total_tracks": 461,
+      "sweet_spot_tracks": 138,
+      "sweet_spot_pct": 29.934924078091107,
+      "avg_tempo": 109.73186231884057,
+      "avg_danceability": 0.667195652173913
+    },
+    {
+      "decade": 1930,
+      "total_tracks": 453,
+      "sweet_spot_tracks": 130,
+      "sweet_spot_pct": 28.697571743929362,
+      "avg_tempo": 109.6658923076923,
+      "avg_danceability": 0.6322153846153846
+    },
+    {
+      "decade": 1940,
+      "total_tracks": 653,
+      "sweet_spot_tracks": 134,
+      "sweet_spot_pct": 20.520673813169985,
+      "avg_tempo": 109.55949999999999,
+      "avg_danceability": 0.466731343283582
+    },
+    {
+      "decade": 1950,
+      "total_tracks": 3159,
+      "sweet_spot_tracks": 729,
+      "sweet_spot_pct": 23.076923076923077,
+      "avg_tempo": 110.37617421124828,
+      "avg_danceability": 0.4955733882030179
+    },
+    {
+      "decade": 1960,
+      "total_tracks": 8784,
+      "sweet_spot_tracks": 2034,
+      "sweet_spot_pct": 23.15573770491803,
+      "avg_tempo": 109.92165535889875,
+      "avg_danceability": 0.5016676499508358
+    },
+    {
+      "decade": 1970,
+      "total_tracks": 17183,
+      "sweet_spot_tracks": 4077,
+      "sweet_spot_pct": 23.726939416865505,
+      "avg_tempo": 110.66090973755213,
+      "avg_danceability": 0.5467051753740495
+    },
+    {
+      "decade": 1980,
+      "total_tracks": 28595,
+      "sweet_spot_tracks": 6964,
+      "sweet_spot_pct": 24.353908025878653,
+      "avg_tempo": 110.60667777139572,
+      "avg_danceability": 0.5456614014933946
+    },
+    {
+      "decade": 1990,
+      "total_tracks": 153049,
+      "sweet_spot_tracks": 34618,
+      "sweet_spot_pct": 22.61889982946638,
+      "avg_tempo": 109.98947749725578,
+      "avg_danceability": 0.5229094112889248
+    },
+    {
+      "decade": 2000,
+      "total_tracks": 423753,
+      "sweet_spot_tracks": 95414,
+      "sweet_spot_pct": 22.51641876281702,
+      "avg_tempo": 110.25156933992919,
+      "avg_danceability": 0.5412278806045235
+    },
+    {
+      "decade": 2010,
+      "total_tracks": 498089,
+      "sweet_spot_tracks": 109267,
+      "sweet_spot_pct": 21.937244147130333,
+      "avg_tempo": 110.53567536401658,
+      "avg_danceability": 0.5454336441926657
+    },
+    {
+      "decade": 2020,
+      "total_tracks": 69726,
+      "sweet_spot_tracks": 13246,
+      "sweet_spot_pct": 18.997217680635632,
+      "avg_tempo": 110.38194858825307,
+      "avg_danceability": 0.5909812773667521
+    }
+  ],
+  "statistics": {
+    "mean_pct": 23.594223479984098,
+    "std_pct": 3.0561550532385584,
+    "min_pct": 18.997217680635632,
+    "max_pct": 29.934924078091107,
+    "range_pct": 10.937706397455475,
+    "cv": 12.95298002000877
+  },
+  "trend_analysis": {
+    "slope": -0.06860043972680607,
+    "intercept": 158.73708974179206,
+    "r_squared": 0.503852050700236
+  },
+  "checks_passed": true
+}

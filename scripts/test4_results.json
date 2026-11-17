@@ -1,0 +1,46 @@
+{
+  "sample_size": 100000,
+  "danceability": {
+    "sweet_spot_mean": 0.5431610686328053,
+    "sweet_spot_std": 0.1734655928712067,
+    "other_zones_mean": 0.4793130043061465,
+    "other_zones_std": 0.19122402116919762,
+    "difference": 0.06384806432665885,
+    "difference_pct": 13.32074526521251,
+    "t_statistic": 44.594788480418764,
+    "p_value": 0.0,
+    "cohens_d": 0.3405838696285269,
+    "confidence_interval_sweet": [
+      0.540867294946992,
+      0.5454548423186186
+    ],
+    "confidence_interval_other": [
+      0.477971252968883,
+      0.48065475564341
+    ]
+  },
+  "energy": {
+    "sweet_spot_mean": 0.5158672884989987,
+    "other_zones_mean": 0.5061937222855898,
+    "t_statistic": 4.296271371181168,
+    "p_value": 1.7385866557908574e-05
+  },
+  "valence": {
+    "sweet_spot_mean": 0.4495001328964136,
+    "other_zones_mean": 0.42064741723483867,
+    "t_statistic": 13.993999239602692,
+    "p_value": 1.8682499667294373e-44
+  },
+  "anova": {
+    "f_statistic": 2506.428521945093,
+    "p_value": 0.0
+  },
+  "zone_means": {
+    "less_80": 0.3597048092551869,
+    "80_100": 0.4903653299916457,
+    "100_120": 0.5431610686328053,
+    "120_140": 0.5418854697286012,
+    "above_140": 0.4573059439133783
+  },
+  "checks_passed": true
+}

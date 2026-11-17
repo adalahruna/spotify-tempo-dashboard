@@ -1,0 +1,60 @@
+{
+  "zones": [
+    {
+      "zone_id": "less_80",
+      "zone_name": "<80 BPM",
+      "count": 126953,
+      "avg_tempo": 70.69110069868377,
+      "min_tempo": 0.0,
+      "max_tempo": 79.999,
+      "percentage": 10.54
+    },
+    {
+      "zone_id": "80_100",
+      "zone_name": "80-100 BPM",
+      "count": 258657,
+      "avg_tempo": 90.39393180157505,
+      "min_tempo": 80.0,
+      "max_tempo": 99.999,
+      "percentage": 21.48
+    },
+    {
+      "zone_id": "100_120",
+      "zone_name": "100-120 BPM (Sweet Spot)",
+      "count": 266776,
+      "avg_tempo": 110.35299041143132,
+      "min_tempo": 100.0,
+      "max_tempo": 119.999,
+      "percentage": 22.16
+    },
+    {
+      "zone_id": "120_140",
+      "zone_name": "120-140 BPM",
+      "count": 286577,
+      "avg_tempo": 129.3391809810278,
+      "min_tempo": 120.0,
+      "max_tempo": 139.999,
+      "percentage": 23.8
+    },
+    {
+      "zone_id": "above_140",
+      "zone_name": ">140 BPM",
+      "count": 265062,
+      "avg_tempo": 161.37381471127512,
+      "min_tempo": 140.0,
+      "max_tempo": 248.93400000000003,
+      "percentage": 22.01
+    }
+  ],
+  "sweet_spot": {
+    "zone_id": "100_120",
+    "zone_name": "100-120 BPM (Sweet Spot)",
+    "count": 266776,
+    "avg_tempo": 110.35299041143132,
+    "min_tempo": 100.0,
+    "max_tempo": 119.999,
+    "percentage": 22.16
+  },
+  "total_tracks": 1204025,
+  "checks_passed": true
+}

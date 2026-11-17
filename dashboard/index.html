@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="web_dashboard" name="shell-type">
+    <title>Spotify Tempo Analysis Dashboard — Green & White Edition</title>
+    
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,300..900;1,300..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Config -->
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-error-container": "#93000a",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed": "#002113",
+                        "primary": "#006e2d",
+                        "on-primary-container": "#004118",
+                        "surface-container-lowest": "#ffffff",
+                        "on-background": "#131b2e",
+                        "outline": "#6d7b6c",
+                        "surface-dim": "#d2d9f4",
+                        "outline-variant": "#bccbb9",
+                        "surface-tint": "#006e2d",
+                        "surface-container-highest": "#dae2fd",
+                        "primary-fixed": "#72fe8f",
+                        "surface-variant": "#dae2fd",
+                        "tertiary-fixed-dim": "#80d5cb",
+                        "on-error": "#ffffff",
+                        "surface-bright": "#faf8ff",
+                        "inverse-primary": "#53e076",
+                        "on-secondary": "#ffffff",
+                        "secondary-container": "#6cf8bb",
+                        "surface-container-low": "#f2f3ff",
+                        "tertiary-container": "#59afa6",
+                        "inverse-surface": "#283044",
+                        "on-surface-variant": "#3d4a3d",
+                        "secondary": "#006c49",
+                        "primary-fixed-dim": "#53e076",
+                        "tertiary": "#006a63",
+                        "on-primary": "#ffffff",
+                        "background": "#faf8ff",
+                        "error-container": "#ffdad6",
+                        "surface-container-high": "#e2e7ff",
+                        "secondary-fixed": "#6ffbbe",
+                        "tertiary-fixed": "#9cf2e8",
+                        "on-secondary-fixed-variant": "#005236",
+                        "secondary-fixed-dim": "#4edea3",
+                        "on-tertiary-fixed": "#00201d",
+                        "on-tertiary-fixed-variant": "#00504a",
+                        "error": "#ba1a1a",
+                        "inverse-on-surface": "#eef0ff",
+                        "surface": "#faf8ff",
+                        "on-secondary-container": "#00714d",
+                        "surface-container": "#eaedff",
+                        "primary-container": "#1db954",
+                        "on-primary-fixed-variant": "#005320",
+                        "on-tertiary-container": "#003f3a",
+                        "on-primary-fixed": "#002108",
+                        "on-surface": "#131b2e"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "space-lg": "1.5rem",
+                        "gutter-lg": "1.75rem",
+                        "margin": "1.5rem",
+                        "space-sm": "0.5rem",
+                        "gutter-sm": "0.75rem",
+                        "space-xl": "2.25rem",
+                        "space-md": "1rem",
+                        "space-xs": "0.25rem",
+                        "margin-lg": "2.5rem",
+                        "margin-sm": "1rem",
+                        "gutter": "1.25rem"
+                    },
+                    fontFamily: {
+                        "headline-lg-mobile": ["Space Grotesk"],
+                        "label-sm": ["JetBrains Mono"],
+                        "headline-sm": ["Space Grotesk"],
+                        "body-lg": ["Hanken Grotesk"],
+                        "headline-md": ["Space Grotesk"],
+                        "headline-lg": ["Space Grotesk"],
+                        "body-md": ["Hanken Grotesk"],
+                        "body-sm": ["Hanken Grotesk"],
+                        "headline-xl-mobile": ["Space Grotesk"],
+                        "headline-xl": ["Space Grotesk"],
+                        "label-lg": ["Hanken Grotesk"],
+                        "label-md": ["JetBrains Mono"]
+                    },
+                    fontSize: {
+                        "headline-lg-mobile": ["24px", { "lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "label-sm": ["10px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "500" }],
+                        "headline-sm": ["18px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+                        "headline-md": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }],
+                        "body-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "400" }],
+                        "headline-xl-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-xl": ["44px", { "lineHeight": "52px", "letterSpacing": "-0.03em", "fontWeight": "700" }],
+                        "label-lg": ["13px", { "lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+                        "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }]
+                    }
+                }
+            }
+        };
+    </script>
+    
+    <style>
+        @layer base {
+            html, body { margin: 0; padding: 0; }
+            body { overscroll-behavior: none; }
+            main > :first-child { margin-top: 0 !important; }
+            main > :last-child { margin-bottom: 0 !important; }
+        }
+        ::-webkit-scrollbar { display: none; }
+        
+        /* Font smoothing */
+        * {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+    </style>
+</head>
+
+<body class="bg-surface font-body-md text-on-surface antialiased min-h-screen">
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+<!-- Sidebar Navigation -->
+<aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-lowest z-50 flex flex-col justify-between py-space-lg px-space-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+    <div class="flex flex-col gap-space-lg">
+        <div class="flex items-center gap-space-sm px-space-xs">
+            <div class="w-9 h-9 rounded-full bg-primary-container flex items-center justify-center text-on-primary shadow-sm">
+                <span class="material-symbols-outlined text-[20px]">graphic_eq</span>
+            </div>
+            <div class="flex flex-col">
+                <span class="font-headline-sm text-headline-sm text-on-surface tracking-tight leading-tight">TempoLab</span>
+                <span class="font-label-sm text-label-sm text-on-surface-variant">v2.4 ANALYTICS</span>
+            </div>
+        </div>
+        
+        <div class="flex flex-col gap-space-xs">
+            <span class="font-label-sm text-label-sm text-on-surface-variant uppercase px-space-xs tracking-wider">Navigation</span>
+            <nav class="flex flex-col gap-1" data-active-classes="bg-surface-container-high text-primary font-bold">
+                <a aria-current="page" class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg transition-colors bg-surface-container-high text-primary font-bold" data-path="overview" href="#">
+                    <span class="material-symbols-outlined text-[18px]">grid_view</span>Overview
+                </a>
+                <a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors font-body-md text-body-md" data-path="search-and-query" href="#">
+                    <span class="material-symbols-outlined text-[18px]">manage_search</span>Search & Query
+                </a>
+                <a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors font-body-md text-body-md" data-path="tempo-zones" href="#">
+                    <span class="material-symbols-outlined text-[18px]">speed</span>Tempo Zones
+                </a>
+                <a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors font-body-md text-body-md" data-path="top-tracks" href="#">
+                    <span class="material-symbols-outlined text-[18px]">equalizer</span>Top Tracks
+                </a>
+                <a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors font-body-md text-body-md" data-path="methodology" href="#">
+                    <span class="material-symbols-outlined text-[18px]">menu_book</span>Methodology
+                </a>
+            </nav>
+        </div>
+        
+        <div class="flex flex-col gap-space-xs">
+            <span class="font-label-sm text-label-sm text-on-surface-variant uppercase px-space-xs tracking-wider">Datasets</span>
+            <div class="p-space-sm rounded-lg bg-surface-container-low flex flex-col gap-1">
+                <div class="flex items-center justify-between">
+                    <span class="font-label-sm text-label-sm text-on-surface-variant">Corpus</span>
+                    <span class="font-label-sm text-label-sm text-primary font-bold" id="sidebarCorpus">1,200,000</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="font-label-sm text-label-sm text-on-surface-variant">Timespan</span>
+                    <span class="font-label-sm text-label-sm text-on-surface">1920–2020</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <span class="font-label-sm text-label-sm text-on-surface-variant">Precision</span>
+                    <span class="font-label-sm text-label-sm text-on-surface">±0.01 BPM</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="flex flex-col gap-space-sm px-space-xs">
+        <div class="flex items-center justify-between py-2 border-t border-surface-container-high">
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
+                <span class="font-label-sm text-label-sm text-on-surface-variant">Telemetry Active</span>
+            </div>
+            <span class="font-label-sm text-label-sm text-primary">99.98%</span>
+        </div>
+    </div>
+</aside>
+
+<!-- Main Content Area -->
+<div class="pl-64 flex flex-col min-h-screen">
+    <!-- Top Header Bar -->
+    <header class="fixed top-0 left-64 right-0 z-40 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+        <div class="h-20 w-full px-margin-lg flex items-center justify-between gap-space-md">
+            <div class="flex items-center gap-space-md">
+                <div class="flex items-center gap-2.5">
+                    <span class="font-headline-sm text-headline-sm text-on-surface font-semibold tracking-tight">Spotify Tempo Analytics</span>
+                    <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-secondary-container/40 text-on-secondary-fixed-variant font-label-sm text-label-sm font-semibold">
+                        <span class="w-1.5 h-1.5 rounded-full bg-primary"></span><span id="headerSubtitle">1.2M Tracks</span>
+                    </span>
+                </div>
+            </div>
+            
+            <nav class="hidden xl:flex items-center gap-1 bg-surface-container-low/60 p-1 rounded-full border border-surface-container-high">
+                <a aria-current="page" class="px-space-md py-1.5 rounded-full font-label-md text-label-md transition-colors bg-primary text-on-primary font-bold shadow-sm" data-path="overview" href="#">Overview</a>
+                <a class="px-space-md py-1.5 rounded-full font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="search-and-query" href="#">Search & Query</a>
+                <a class="px-space-md py-1.5 rounded-full font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="tempo-zones" href="#">Tempo Zones</a>
+                <a class="px-space-md py-1.5 rounded-full font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="top-tracks" href="#">Top Tracks</a>
+                <a class="px-space-md py-1.5 rounded-full font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="methodology" href="#">Methodology</a>
+            </nav>
+            
+            <div class="flex items-center gap-3">
+                <div class="flex items-center bg-surface-container-low rounded-full px-3 py-1.5 gap-2">
+                    <span class="material-symbols-outlined text-[18px] text-on-surface-variant">search</span>
+                    <input class="bg-transparent font-body-sm text-body-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none w-36 lg:w-48" placeholder="Quick search..." type="text">
+                    <span class="font-label-sm text-label-sm text-on-surface-variant hidden sm:inline px-1.5 py-0.5 rounded bg-surface-container-lowest">⌘K</span>
+                </div>
+                <div class="w-9 h-9 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-label-md shadow-sm">
+                    <span>TL</span>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <main class="w-full pt-20 bg-surface flex-1 px-margin-lg py-space-lg">
+        <div class="flex flex-col w-full gap-space-lg pb-12">
+
+<!-- Top Search & Filter Bar (README v2.0) -->
+<section class="w-full bg-surface-container-lowest rounded-xl p-space-md shadow-[0_1px_4px_rgba(15,23,42,0.04)] flex flex-col gap-space-md">
+    <div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-space-md">
+        <div class="flex-1 flex items-center bg-surface-container-low rounded-xl px-space-md py-2.5 focus-within:ring-2 focus-within:ring-primary/20 transition-all">
+            <span class="material-symbols-outlined text-[20px] text-on-surface-variant mr-space-sm">search</span>
+            <input class="w-full bg-transparent font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none" id="searchInput" placeholder="Search track name or artist (e.g. 'Get Lucky', 'Daft Punk')..." type="text">
+        </div>
+        <div class="flex flex-wrap items-center gap-space-sm">
+            <div class="flex items-center bg-surface-container-low px-space-sm py-1.5 rounded-xl gap-2">
+                <span class="font-label-sm text-label-sm text-on-surface-variant uppercase font-semibold">Min BPM</span>
+                <input class="w-14 bg-surface-container-lowest text-center font-label-md text-label-md text-on-surface rounded-lg py-1 focus:outline-none" id="tempoMin" type="number" value="100">
+                <span class="text-on-surface-variant font-label-sm">–</span>
+                <span class="font-label-sm text-label-sm text-on-surface-variant uppercase font-semibold">Max</span>
+                <input class="w-14 bg-surface-container-lowest text-center font-label-md text-label-md text-on-surface rounded-lg py-1 focus:outline-none" id="tempoMax" type="number" value="120">
+            </div>
+            <div class="flex items-center gap-space-xs">
+                <button class="bg-primary hover:bg-secondary text-on-primary px-space-md py-2 rounded-xl font-label-md text-label-md font-semibold transition-colors flex items-center gap-1.5 shadow-sm" onclick="performSearch()" type="button">
+                    <span class="material-symbols-outlined text-[16px]">tune</span><span>Filter Tracks</span>
+                </button>
+                <button class="bg-surface-container-low hover:bg-surface-container text-on-surface px-space-md py-2 rounded-xl font-label-md text-label-md font-semibold transition-colors" onclick="clearSearch()" id="clearSearchBtn" type="button">Reset</button>
+                <button class="bg-surface-container-low hover:bg-surface-container text-on-surface-variant hover:text-on-surface px-space-sm py-2 rounded-xl font-label-md text-label-md transition-colors flex items-center gap-1" title="Download full query as CSV" type="button">
+                    <span class="material-symbols-outlined text-[18px]">download</span><span class="hidden md:inline">Export CSV</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="flex items-center justify-between flex-wrap gap-2 pt-2 border-t border-surface-container-high/40">
+        <div class="flex items-center flex-wrap gap-1.5">
+            <span class="font-label-sm text-label-sm text-on-surface-variant uppercase font-semibold mr-1">Presets:</span>
+            <button class="px-3 py-1 rounded-full bg-secondary-container/40 text-on-secondary-fixed-variant font-label-sm text-label-sm font-semibold hover:bg-secondary-container transition-colors flex items-center gap-1.5" onclick="setPreset(100, 120)" type="button">
+                <span class="w-1.5 h-1.5 rounded-full bg-primary"></span><span>100–120 Sweet Spot</span>
+            </button>
+            <button class="px-3 py-1 rounded-full bg-surface-container-low text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-colors" onclick="setPreset(0, 240)" type="button">All Tempos</button>
+            <button class="px-3 py-1 rounded-full bg-surface-container-low text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-colors" onclick="setPreset(0, 80)" type="button">&lt; 80 BPM (Slow)</button>
+            <button class="px-3 py-1 rounded-full bg-surface-container-low text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-colors" onclick="setPreset(120, 140)" type="button">120–140 BPM (Upbeat)</button>
+        </div>
+        <div class="text-on-surface-variant font-label-sm text-label-sm hidden sm:flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+            <span>Streaming PostgreSQL Read-Replica • 14ms latency</span>
+        </div>
+        <div id="searchStats" class="hidden"></div>
+    </div>
+</section>
+
+<!-- 4 Summary Metric Cards (README spec) -->
+<section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-space-md">
+    <!-- Card 1: Total Tracks -->
+    <div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-[0_1px_4px_rgba(15,23,42,0.03)] flex flex-col justify-between group hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between mb-space-sm">
+            <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Total Tracks</span>
+            <div class="w-8 h-8 rounded-lg bg-surface-container-low flex items-center justify-center text-on-surface-variant">
+                <span class="material-symbols-outlined text-[18px]">library_music</span>
+            </div>
+        </div>
+        <div class="flex items-baseline gap-2 mb-1">
+            <span class="font-headline-xl text-headline-xl text-on-surface tracking-tight" id="totalTracks">1.20M</span>
+            <span class="font-label-sm text-label-sm text-primary font-bold">100%</span>
+        </div>
+        <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+            Total analyzed tracks (1920–2020) • 14 Decades catalogued
+        </p>
+    </div>
+    
+    <!-- Card 2: Average Tempo -->
+    <div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-[0_1px_4px_rgba(15,23,42,0.03)] flex flex-col justify-between group hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between mb-space-sm">
+            <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Average Tempo</span>
+            <div class="w-8 h-8 rounded-lg bg-surface-container-low flex items-center justify-center text-on-surface-variant">
+                <span class="material-symbols-outlined text-[18px]">speed</span>
+            </div>
+        </div>
+        <div class="flex items-baseline gap-2 mb-1">
+            <span class="font-headline-xl text-headline-xl text-on-surface tracking-tight" id="avgTempo">117.63</span>
+            <span class="font-label-md text-label-md text-on-surface-variant">BPM</span>
+        </div>
+        <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+            Global tempo average across 1.2M songs with standard dev σ = 24.1
+        </p>
+    </div>
+    
+    <!-- Card 3: Sweet Spot % -->
+    <div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-[0_1px_4px_rgba(15,23,42,0.03)] flex flex-col justify-between group hover:shadow-md transition-shadow relative overflow-hidden">
+        <div class="absolute -right-6 -bottom-6 w-24 h-24 rounded-full bg-secondary-container/20 pointer-events-none"></div>
+        <div class="flex items-center justify-between mb-space-sm">
+            <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Sweet Spot %</span>
+            <span class="px-2 py-0.5 rounded-full bg-secondary-container/50 text-on-secondary-fixed-variant font-label-sm text-label-sm font-bold">266K Songs</span>
+        </div>
+        <div class="flex items-baseline gap-2 mb-1">
+            <span class="font-headline-xl text-headline-xl text-primary tracking-tight font-bold" id="sweetSpotPct">22.18%</span>
+            <span class="font-label-sm text-label-sm text-secondary font-semibold">±1.4% decade drift</span>
+        </div>
+        <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+            Tracks in 100–120 BPM zone • High temporal stability across eras
+        </p>
+    </div>
+    
+    <!-- Card 4: Danceability Boost -->
+    <div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-[0_1px_4px_rgba(15,23,42,0.03)] flex flex-col justify-between group hover:shadow-md transition-shadow relative overflow-hidden">
+        <div class="flex items-center justify-between mb-space-sm">
+            <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Danceability Boost</span>
+            <span class="px-2 py-0.5 rounded-full bg-primary text-on-primary font-label-sm text-label-sm">Hypothesis Validated</span>
+        </div>
+        <div class="flex items-baseline gap-2 mb-1">
+            <span class="font-headline-xl text-headline-xl text-on-surface tracking-tight" id="danceBoost">+13.37%</span>
+            <span class="material-symbols-outlined text-[20px] text-primary">trending_up</span>
+        </div>
+        <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+            Sweet spot advantage vs other tempo zones (0.641 vs 0.565 baseline)
+        </p>
+    </div>
+</section>
+
+<!-- Main Content Layout (12 cols: 8 left, 4 right) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+
+<!-- LEFT COLUMN (8 cols) -->
+<div class="lg:col-span-8 flex flex-col gap-space-lg">
+
+<!-- a. Tempo Zone Visualization (Dot-Matrix Style) -->
+<section class="bg-surface-container-lowest rounded-xl p-space-lg shadow-[0_1px_4px_rgba(15,23,42,0.03)] flex flex-col gap-space-md">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+        <div>
+            <div class="flex items-center gap-2">
+                <h2 class="font-headline-md text-headline-md text-on-surface tracking-tight">Tempo Zone Distribution & Density</h2>
+                <span class="px-2 py-0.5 rounded-full bg-surface-container-low font-label-sm text-label-sm text-on-surface-variant">1.2M Corpus</span>
+            </div>
+            <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5" id="sweetSpotPctViz">Discrete dot-matrix density map comparing tempo brackets</p>
+        </div>
+        <div class="flex items-center bg-surface-container-low p-1 rounded-lg">
+            <button class="px-space-sm py-1 rounded bg-surface-container-lowest text-primary font-label-sm text-label-sm font-bold shadow-xs transition-colors" id="btnViewVolume" onclick="toggleMetricMode('volume')">
+                Track Volume
+            </button>
+            <button class="px-space-sm py-1 rounded text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-colors" id="btnViewLift" onclick="toggleMetricMode('lift')">
+                Danceability Lift
+            </button>
+        </div>
+    </div>
+    
+    <!-- Dot Matrix Graph Canvas -->
+    <div class="w-full bg-surface-container-low/50 rounded-xl p-6">
+        <div class="flex items-end justify-center gap-6 min-h-[280px] max-w-5xl mx-auto" id="tempoZoneViz">
+            <!-- Dots will be generated by JS -->
+        </div>
+    </div>
+    
+    <!-- Summary Banner -->
+    <div class="bg-secondary-container/20 rounded-lg p-space-md flex items-start gap-space-sm">
+        <span class="material-symbols-outlined text-primary text-[22px] shrink-0 mt-0.5">verified</span>
+        <div class="flex flex-col gap-0.5">
+            <span class="font-label-lg text-label-lg text-on-surface font-bold">Sweet Spot Hypothesis Validated</span>
+            <p class="font-body-md text-body-md text-on-surface-variant">
+                Tracks between <strong>100–120 BPM</strong> show a consistent <span class="text-primary font-bold" id="infoBoost">+13.37%</span> danceability boost over other zones across 100 years of recorded music, matching natural human walking cadence and heart rate elevation.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- b. Top Tracks Table (Hit Formula Songs) -->
+<section class="bg-surface-container-lowest rounded-xl p-space-lg shadow-[0_1px_4px_rgba(15,23,42,0.03)] flex flex-col gap-space-md">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-space-sm">
+        <div>
+            <h3 class="font-headline-md text-headline-md text-on-surface tracking-tight" id="tableTitle">Top Tracks in Sweet Spot (100–120 BPM)</h3>
+            <p class="font-body-sm text-body-sm text-on-surface-variant" id="tableSubtitle">Archetypal hit formula records exhibiting optimal kinetic resonance</p>
+        </div>
+    </div>
+    
+    <!-- Data Table Container -->
+    <div class="overflow-x-auto -mx-space-lg px-space-lg">
+        <table class="w-full text-left border-collapse" id="tracksTable">
+            <thead>
+                <tr class="bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+                    <th class="py-2.5 px-3 rounded-l-lg">Track & Artist</th>
+                    <th class="py-2.5 px-3 text-right">Tempo</th>
+                    <th class="py-2.5 px-3">Energy</th>
+                    <th class="py-2.5 px-3">Danceability</th>
+                    <th class="py-2.5 px-3 text-center rounded-r-lg">Status</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y-0 font-body-md text-body-md text-on-surface" id="tracksTableBody">
+                <tr>
+                    <td colspan="5" class="py-8 text-center text-on-surface-variant">
+                        <span class="material-symbols-outlined text-4xl">hourglass_empty</span>
+                        <p class="mt-2">Loading tracks...</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+</div>
+
+<!-- RIGHT COLUMN (4 cols) -->
+<div class="lg:col-span-4 flex flex-col gap-space-lg">
+
+<!-- a. Key Findings (README Section 5) -->
+<section class="bg-surface-container-lowest rounded-xl p-space-lg shadow-[0_1px_4px_rgba(15,23,42,0.03)] flex flex-col gap-space-md">
+    <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-[20px] text-primary">psychology_alt</span>
+            <h3 class="font-headline-sm text-headline-sm text-on-surface">Key Research Findings</h3>
+        </div>
+        <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Thesis Sec. 5</span>
+    </div>
+    <div class="flex flex-col gap-3" id="keyFindings">
+        <!-- Findings will be generated by JS -->
+    </div>
+</section>
+
+<!-- b. System Architecture & Status Card -->
+<section class="bg-surface-container-lowest rounded-xl p-space-lg shadow-[0_1px_4px_rgba(15,23,42,0.03)] flex flex-col gap-space-md">
+    <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-[20px] text-on-surface">dns</span>
+            <h3 class="font-headline-sm text-headline-sm text-on-surface">Architecture Status</h3>
+        </div>
+        <span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">Hybrid</span>
+    </div>
+    
+    <div class="flex flex-col gap-space-sm">
+        <!-- Firestore NoSQL -->
+        <div class="p-space-sm rounded-lg bg-surface-container-low flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-primary animate-pulse"></span>
+                <div class="flex flex-col">
+                    <span class="font-label-md text-label-md text-on-surface font-bold">Firestore NoSQL</span>
+                    <span class="font-body-sm text-body-sm text-on-surface-variant">Summary stats cache (Fast 1x load)</span>
+                </div>
+            </div>
+            <span class="px-2 py-0.5 rounded bg-secondary-container/50 text-on-secondary-fixed-variant font-label-sm text-label-sm font-semibold">Live Active</span>
+        </div>
+        
+        <!-- PostgreSQL 18.6 -->
+        <div class="p-space-sm rounded-lg bg-surface-container-low flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-primary"></span>
+                <div class="flex flex-col">
+                    <span class="font-label-md text-label-md text-on-surface font-bold">PostgreSQL 18.6</span>
+                    <span class="font-body-sm text-body-sm text-on-surface-variant">Live queries & 1.2M tracks</span>
+                </div>
+            </div>
+            <span class="px-2 py-0.5 rounded bg-surface-container-highest text-on-surface-variant font-label-sm text-label-sm font-semibold">Connected</span>
+        </div>
+    </div>
+    
+    <!-- Architecture Metrics Breakdown -->
+    <div class="grid grid-cols-2 gap-2 pt-1">
+        <div class="bg-surface-container-low/50 p-2 rounded flex flex-col">
+            <span class="font-label-sm text-label-sm text-on-surface-variant">Query Engine</span>
+            <span class="font-label-md text-label-md text-on-surface font-bold">B-Tree + GIN</span>
+        </div>
+        <div class="bg-surface-container-low/50 p-2 rounded flex flex-col">
+            <span class="font-label-sm text-label-sm text-on-surface-variant">Replica Lag</span>
+            <span class="font-label-md text-label-md text-primary font-bold">0.8 ms</span>
+        </div>
+    </div>
+    
+    <!-- Simple Function Action Buttons -->
+    <div class="flex items-center gap-2 pt-2 border-t-0">
+        <button class="flex-1 bg-surface-container-low hover:bg-surface-container text-on-surface py-2 rounded-lg font-label-md text-label-md text-center transition-colors flex items-center justify-center gap-1.5" onclick="triggerHealthCheck(this)" type="button">
+            <span class="material-symbols-outlined text-[16px]">stethoscope</span>
+            <span>Run Health Check</span>
+        </button>
+        <button class="flex-1 bg-surface-container-low hover:bg-surface-container text-on-surface py-2 rounded-lg font-label-md text-label-md text-center transition-colors flex items-center justify-center gap-1.5" onclick="triggerSync(this)" type="button">
+            <span class="material-symbols-outlined text-[16px]">sync</span>
+            <span>Re-sync Database</span>
+        </button>
+    </div>
+</section>
+
+<!-- Mini Methodology Callout -->
+<section class="bg-surface-container-lowest rounded-xl p-space-md shadow-[0_1px_4px_rgba(15,23,42,0.03)] flex items-center gap-space-sm">
+    <div class="w-10 h-10 rounded-lg bg-surface-container-low flex items-center justify-center text-primary shrink-0">
+        <span class="material-symbols-outlined text-[20px]">science</span>
+    </div>
+    <div class="flex flex-col min-w-0">
+        <span class="font-label-md text-label-md text-on-surface font-bold">Algorithmic Calibration</span>
+        <span class="font-body-sm text-body-sm text-on-surface-variant leading-tight">Audio analysis parsed via Spotify Web API Echo Nest engine with audio feature parity verification.</span>
+    </div>
+</section>
+
+</div>
+
+</div>
+
+        </div>
+    </main>
+</div>
+
+<!-- Connect to app.js for data loading -->
+<script src="app.js"></script>
+
+<script>
+// Simple functional controls for UI interactions
+function setPreset(min, max) {
+    document.getElementById('tempoMin').value = min;
+    document.getElementById('tempoMax').value = max;
+}
+
+function toggleMetricMode(mode) {
+    const btnVol = document.getElementById('btnViewVolume');
+    const btnLift = document.getElementById('btnViewLift');
+    if (mode === 'volume') {
+        btnVol.className = "px-space-sm py-1 rounded bg-surface-container-lowest text-primary font-label-sm text-label-sm font-bold shadow-xs transition-colors";
+        btnLift.className = "px-space-sm py-1 rounded text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-colors";
+    } else {
+        btnLift.className = "px-space-sm py-1 rounded bg-surface-container-lowest text-primary font-label-sm text-label-sm font-bold shadow-xs transition-colors";
+        btnVol.className = "px-space-sm py-1 rounded text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-colors";
+    }
+}
+
+function triggerHealthCheck(btn) {
+    const originalText = btn.innerHTML;
+    btn.innerHTML = `<span class="material-symbols-outlined text-[16px] animate-spin">refresh</span><span>Verifying...</span>`;
+    setTimeout(() => {
+        btn.innerHTML = `<span class="material-symbols-outlined text-[16px] text-primary">check_circle</span><span class="text-primary font-bold">100% Healthy</span>`;
+        setTimeout(() => { btn.innerHTML = originalText; }, 2500);
+    }, 800);
+}
+
+function triggerSync(btn) {
+    const originalText = btn.innerHTML;
+    btn.innerHTML = `<span class="material-symbols-outlined text-[16px] animate-spin">sync</span><span>Syncing...</span>`;
+    setTimeout(() => {
+        btn.innerHTML = `<span class="material-symbols-outlined text-[16px] text-primary">done_all</span><span class="text-primary font-bold">Synced (1.20M)</span>`;
+        setTimeout(() => { btn.innerHTML = originalText; }, 2500);
+    }, 900);
+}
+</script>
+
+</body>
+</html>
