@@ -145,6 +145,25 @@ pip install -r requirements.txt
 
 ---
 
+### **Problem: Filter buttons not working / 404 errors**
+
+**FIXED!** ✅ Update terbaru sudah fix bug ini.
+
+**Solusi:**
+```powershell
+# Hard refresh browser
+Ctrl + Shift + R
+
+# Kalau masih error, clear browser cache:
+Ctrl + Shift + Delete → Clear cached images and files
+
+# Check API endpoint in console (F12):
+# Should show: http://localhost:5000/api/...
+# NOT: http://[::1]:8000/api/...
+```
+
+---
+
 ### **Problem: "Database connection error"**
 
 **Solusi:**
