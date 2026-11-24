@@ -25,6 +25,9 @@ data/
 .env.local
 .env.production
 
+# Firebase credentials (contains secrets)
+firebase-credentials.json
+
 # IDE
 .vscode/
 .idea/
