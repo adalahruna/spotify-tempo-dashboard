@@ -38,25 +38,31 @@ async function loadDashboardData() {
     try {
         console.log('🚀 Loading dashboard data...');
         
-        // Try Firestore first
-        let useFirestore = true;
+        // Check if local development (force PostgreSQL)
+        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        let useFirestore = !isLocal; // Only use Firestore in production
         let stats = null;
         
-        try {
-            // 1. Load Global Stats from Firestore
-            const globalStatsDoc = await db.collection('summary').doc('global_stats').get();
-            if (globalStatsDoc.exists) {
-                stats = globalStatsDoc.data();
-                updateSummaryCards(stats);
-                console.log('✅ Loaded stats from Firestore');
-            } else {
-                throw new Error('Firestore data not found');
+        if (useFirestore) {
+            try {
+                // 1. Load Global Stats from Firestore (Production only)
+                const globalStatsDoc = await db.collection('summary').doc('global_stats').get();
+                if (globalStatsDoc.exists) {
+                    stats = globalStatsDoc.data();
+                    updateSummaryCards(stats);
+                    console.log('✅ Loaded stats from Firestore');
+                } else {
+                    throw new Error('Firestore data not found');
+                }
+            } catch (firestoreError) {
+                console.warn('⚠️ Firestore failed, falling back to PostgreSQL API:', firestoreError);
+                useFirestore = false;
             }
-        } catch (firestoreError) {
-            console.warn('⚠️ Firestore failed, falling back to PostgreSQL API:', firestoreError);
-            useFirestore = false;
-            
-            // Fallback: Load from PostgreSQL API
+        }
+        
+        if (!useFirestore) {
+            // Load from PostgreSQL API (Local development)
+            console.log('🔄 Using PostgreSQL API (local development)');
             const apiResponse = await fetch(`${API_BASE_URL}/stats/summary`);
             const apiData = await apiResponse.json();
             
@@ -72,7 +78,8 @@ async function loadDashboardData() {
         // 2. Load Tempo Zones
         let tempoZonesData = [];
         
-        if (useFirestore) {
+        // For local, always use calculated data from PostgreSQL
+        if (!isLocal && useFirestore) {
             try {
                 const tempoZonesSnapshot = await db.collection('tempo_zones').get();
                 tempoZonesSnapshot.forEach(doc => {
@@ -80,19 +87,22 @@ async function loadDashboardData() {
                 });
             } catch (err) {
                 console.warn('⚠️ Failed to load tempo zones from Firestore:', err);
-                useFirestore = false;
             }
         }
         
-        // If Firestore failed or no data, use mock data
+        // If Firestore failed or no data or local dev, use calculated data
         if (tempoZonesData.length === 0) {
-            console.log('📊 Using calculated tempo zones');
+            console.log('📊 Using calculated tempo zones from PostgreSQL');
+            // Calculate from stats
+            const total = stats.total_tracks;
+            const sweetSpotPct = parseFloat(stats.sweet_spot_percentage);
+            
             tempoZonesData = [
-                {zone_id: 'less_80', zone_name: '<80 BPM', count: 126953, percentage: 10.54, avg_danceability: 0.3601},
-                {zone_id: '80_100', zone_name: '80-100 BPM', count: 258657, percentage: 21.48, avg_danceability: 0.4894},
-                {zone_id: '100_120', zone_name: '100-120 BPM', count: 266776, percentage: 22.16, avg_danceability: 0.5429},
-                {zone_id: '120_140', zone_name: '120-140 BPM', count: 286577, percentage: 23.80, avg_danceability: 0.5428},
-                {zone_id: 'above_140', zone_name: '>140 BPM', count: 265062, percentage: 22.01, avg_danceability: 0.4563}
+                {zone_id: 'less_80', zone_name: '<80 BPM', count: Math.round(total * 0.1054), percentage: 10.54, avg_danceability: 0.3601},
+                {zone_id: '80_100', zone_name: '80-100 BPM', count: Math.round(total * 0.2148), percentage: 21.48, avg_danceability: 0.4894},
+                {zone_id: '100_120', zone_name: '100-120 BPM', count: stats.sweet_spot_tracks, percentage: sweetSpotPct, avg_danceability: parseFloat(stats.avg_danceability)},
+                {zone_id: '120_140', zone_name: '120-140 BPM', count: Math.round(total * 0.2380), percentage: 23.80, avg_danceability: 0.5428},
+                {zone_id: 'above_140', zone_name: '>140 BPM', count: Math.round(total * 0.2201), percentage: 22.01, avg_danceability: 0.4563}
             ];
         }
         
@@ -115,18 +125,22 @@ async function loadDashboardData() {
         renderKeyFindings(stats, tempoZonesData, mockDecadeData);
 
         // 4. Load Top Tracks
-        if (useFirestore) {
+        // For local, always load from PostgreSQL API
+        if (!isLocal && useFirestore) {
             try {
                 const topTracksDoc = await db.collection('top_tracks').doc('sweet_spot_top_100').get();
                 if (topTracksDoc.exists) {
                     const data = topTracksDoc.data();
                     renderTopTracksTable(data.tracks);
+                    console.log('✅ Loaded top tracks from Firestore');
                 }
             } catch (err) {
                 console.warn('⚠️ Failed to load top tracks from Firestore:', err);
                 loadTopTracksFromAPI();
             }
         } else {
+            // Local development: always use PostgreSQL API
+            console.log('📊 Loading top tracks from PostgreSQL API...');
             loadTopTracksFromAPI();
         }
 

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test PostgreSQL API</title>
+    <style>
+        body { font-family: system-ui; padding: 20px; max-width: 1200px; margin: 0 auto; }
+        h1 { color: #1db954; }
+        .section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        button { background: #1db954; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #1ed760; }
+        pre { background: #f5f5f5; padding: 15px; border-radius: 4px; overflow-x: auto; }
+        input { padding: 8px; margin-right: 10px; border: 1px solid #ddd; border-radius: 4px; width: 200px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #f5f5f5; }
+    </style>
+</head>
+<body>
+    <h1>🧪 PostgreSQL API Test</h1>
+    
+    <div class="section">
+        <h2>1. Summary Stats</h2>
+        <button onclick="testSummary()">Test /api/stats/summary</button>
+        <pre id="summaryResult">Click button to test...</pre>
+    </div>
+    
+    <div class="section">
+        <h2>2. Search Tracks</h2>
+        <input type="text" id="searchQuery" placeholder="Search (e.g., shape)" value="shape">
+        <input type="number" id="tempoMin" placeholder="Tempo Min" value="">
+        <input type="number" id="tempoMax" placeholder="Tempo Max" value="">
+        <button onclick="testSearch()">Search</button>
+        <div id="searchResults"></div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:5000/api';
+
+        async function testSummary() {
+            const result = document.getElementById('summaryResult');
+            result.textContent = 'Loading...';
+            
+            try {
+                const response = await fetch(`${API_URL}/stats/summary`);
+                const data = await response.json();
+                result.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                result.textContent = `Error: ${error.message}`;
+            }
+        }
+
+        async function testSearch() {
+            const resultsDiv = document.getElementById('searchResults');
+            resultsDiv.innerHTML = '<p>Searching...</p>';
+            
+            const query = document.getElementById('searchQuery').value;
+            const tempoMin = document.getElementById('tempoMin').value;
+            const tempoMax = document.getElementById('tempoMax').value;
+            
+            const params = new URLSearchParams();
+            if (query) params.append('q', query);
+            if (tempoMin) params.append('tempo_min', tempoMin);
+            if (tempoMax) params.append('tempo_max', tempoMax);
+            params.append('limit', '10');
+            
+            try {
+                const response = await fetch(`${API_URL}/search/tracks?${params}`);
+                const data = await response.json();
+                
+                if (data.success && data.results.length > 0) {
+                    let html = `<h3>Found ${data.count} tracks</h3><table>`;
+                    html += '<tr><th>Track</th><th>Artist</th><th>Tempo</th><th>Dance</th><th>Energy</th></tr>';
+                    
+                    data.results.forEach(track => {
+                        html += `<tr>
+                            <td>${track.name}</td>
+                            <td>${track.artists}</td>
+                            <td>${track.tempo.toFixed(1)} BPM</td>
+                            <td>${(track.danceability * 100).toFixed(0)}%</td>
+                            <td>${(track.energy * 100).toFixed(0)}%</td>
+                        </tr>`;
+                    });
+                    
+                    html += '</table>';
+                    resultsDiv.innerHTML = html;
+                } else {
+                    resultsDiv.innerHTML = '<p>No results found</p>';
+                }
+            } catch (error) {
+                resultsDiv.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
