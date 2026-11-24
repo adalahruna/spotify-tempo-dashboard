@@ -2,10 +2,10 @@
 SEARCH API FOR DASHBOARD
 ========================
 Flask API untuk search tracks dari PostgreSQL
-Menghindari Firestore quota limits untuk query operations
+Supports both local development and production deployment
 """
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import psycopg2
 from psycopg2.extras import RealDictCursor
@@ -17,8 +17,22 @@ load_dotenv()
 
 app = Flask(__name__)
 
-# Enable CORS - gunakan env variable atau default untuk development
-cors_origins = os.getenv('CORS_ORIGINS', '*')
+# Production-ready CORS configuration
+if os.environ.get('RAILWAY_ENVIRONMENT'):
+    # Production: Allow your Vercel domain + Railway domain
+    vercel_domain = os.environ.get('VERCEL_DOMAIN', 'spotify-tempo-dashboard.vercel.app')
+    cors_origins = [
+        f'https://{vercel_domain}',
+        f'https://*.vercel.app',  # All Vercel preview deployments
+        'http://localhost:8000',  # Local testing
+        'http://127.0.0.1:8000'
+    ]
+    print(f"🔐 CORS enabled for: {cors_origins}")
+else:
+    # Development: Allow localhost
+    cors_origins = ['http://localhost:8000', 'http://127.0.0.1:8000', '*']
+    print(f"🔓 CORS enabled for development: {cors_origins}")
+
 CORS(app, resources={
     r"/api/*": {
         "origins": cors_origins,
@@ -26,6 +40,14 @@ CORS(app, resources={
         "allow_headers": ["Content-Type", "Authorization"]
     }
 })
+
+# Import and register prediction blueprint
+try:
+    from predict_api import predict_bp
+    app.register_blueprint(predict_bp, url_prefix='/api')
+    print("✅ ML Prediction endpoints loaded")
+except Exception as e:
+    print(f"⚠️  ML Prediction endpoints not available: {e}")
 
 # PostgreSQL connection config - gunakan env variables atau DATABASE_URL
 DATABASE_URL = os.getenv('DATABASE_URL')

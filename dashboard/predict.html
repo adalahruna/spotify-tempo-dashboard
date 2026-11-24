@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Music Predictor - Spotify Tempo Analysis</title>
+    
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,300..900;1,300..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        * {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        body {
+            font-family: 'Hanken Grotesk', sans-serif;
+        }
+        .font-headline {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        /* Range slider styling */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            background: transparent;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        input[type="range"]::-webkit-slider-track {
+            background-color: #e5e7eb;
+            border-radius: 0.5rem;
+            height: 0.5rem;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            margin-top: -4px;
+            background-color: #1db954;
+            height: 1rem;
+            width: 1rem;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        input[type="range"]::-moz-range-track {
+            background-color: #e5e7eb;
+            border-radius: 0.5rem;
+            height: 0.5rem;
+        }
+        
+        input[type="range"]::-moz-range-thumb {
+            background-color: #1db954;
+            height: 1rem;
+            width: 1rem;
+            border-radius: 50%;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .prediction-card {
+            transition: all 0.3s ease;
+        }
+        
+        .prediction-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen">
+
+<!-- Header -->
+<header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center text-white shadow-lg">
+                    <span class="material-symbols-outlined text-[24px]">psychology</span>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-headline font-bold text-gray-900">Music Success Predictor</h1>
+                    <p class="text-sm text-gray-500">AI-powered track analysis using 1.2M songs</p>
+                </div>
+            </div>
+            <a href="index.html" class="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors">
+                <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+                <span class="font-semibold">Back to Dashboard</span>
+            </a>
+        </div>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main class="max-w-7xl mx-auto px-6 py-8">
+    
+    <!-- Info Banner -->
+    <div class="mb-8 p-6 rounded-xl bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200">
+        <div class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-blue-600 text-[28px]">info</span>
+            <div>
+                <h3 class="font-headline font-bold text-gray-900 mb-2">How It Works</h3>
+                <p class="text-gray-700 text-sm leading-relaxed">
+                    Our machine learning models trained on <strong>1.2 million Spotify tracks</strong> can predict:
+                    popularity scores, hit potential, danceability, and optimal tempo for your music.
+                    Adjust the audio features below to see real-time predictions.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- LEFT: Input Form -->
+        <div class="lg:col-span-2 space-y-6">
+            
+            <!-- Audio Features Section -->
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                <h2 class="text-xl font-headline font-bold text-gray-900 mb-6 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-green-600">tune</span>
+                    Audio Features
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <!-- Tempo -->
+                    <div>
+                        <label class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-semibold text-gray-700">Tempo (BPM)</span>
+                            <span class="text-lg font-bold text-green-600 font-mono" id="tempoValue">120</span>
+                        </label>
+                        <input type="range" id="tempo" min="40" max="200" value="120" step="1" class="w-full">
+                        <div class="flex justify-between text-xs text-gray-500 mt-1">
+                            <span>40</span>
+                            <span class="text-green-600 font-bold">Sweet Spot: 100-120</span>
+                            <span>200</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Energy -->
+                    <div>
+                        <label class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-semibold text-gray-700">Energy</span>
+                            <span class="text-lg font-bold text-green-600 font-mono" id="energyValue">0.80</span>
+                        </label>
+                        <input type="range" id="energy" min="0" max="1" value="0.80" step="0.01" class="w-full">
+                        <div class="flex justify-between text-xs text-gray-500 mt-1">
+                            <span>Low</span>
+                            <span>High</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Danceability -->
+                    <div>
+                        <label class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-semibold text-gray-700">Danceability</span>
+                            <span class="text-lg font-bold text-green-600 font-mono" id="danceabilityValue">0.70</span>
+                        </label>
+                        <input type="range" id="danceability" min="0" max="1" value="0.70" step="0.01" class="w-full">
+                        <div class="flex justify-between text-xs text-gray-500 mt-1">
+                            <span>Low</span>
+                            <span>High</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Valence -->
+                    <div>
+                        <label class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-semibold text-gray-700">Valence (Positivity)</span>
+                            <span class="text-lg font-bold text-green-600 font-mono" id="valenceValue">0.60</span>
+                        </label>
+                        <input type="range" id="valence" min="0" max="1" value="0.60" step="0.01" class="w-full">
+                        <div class="flex justify-between text-xs text-gray-500 mt-1">
+                            <span>Sad</span>
+                            <span>Happy</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Acousticness -->
+                    <div>
+                        <label class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-semibold text-gray-700">Acousticness</span>
+                            <span class="text-lg font-bold text-green-600 font-mono" id="acousticnessValue">0.10</span>
+                        </label>
+                        <input type="range" id="acousticness" min="0" max="1" value="0.10" step="0.01" class="w-full">
+                        <div class="flex justify-between text-xs text-gray-500 mt-1">
+                            <span>Electric</span>
+                            <span>Acoustic</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Instrumentalness -->
+                    <div>
+                        <label class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-semibold text-gray-700">Instrumentalness</span>
+                            <span class="text-lg font-bold text-green-600 font-mono" id="instrumentalnessValue">0.00</span>
+                        </label>
+                        <input type="range" id="instrumentalness" min="0" max="1" value="0.00" step="0.01" class="w-full">
+                        <div class="flex justify-between text-xs text-gray-500 mt-1">
+                            <span>Vocals</span>
+                            <span>Instrumental</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Liveness -->
+                    <div>
+                        <label class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-semibold text-gray-700">Liveness</span>
+                            <span class="text-lg font-bold text-green-600 font-mono" id="livenessValue">0.10</span>
+                        </label>
+                        <input type="range" id="liveness" min="0" max="1" value="0.10" step="0.01" class="w-full">
+                        <div class="flex justify-between text-xs text-gray-500 mt-1">
+                            <span>Studio</span>
+                            <span>Live</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Speechiness -->
+                    <div>
+                        <label class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-semibold text-gray-700">Speechiness</span>
+                            <span class="text-lg font-bold text-green-600 font-mono" id="speechinessValue">0.05</span>
+                        </label>
+                        <input type="range" id="speechiness" min="0" max="1" value="0.05" step="0.01" class="w-full">
+                        <div class="flex justify-between text-xs text-gray-500 mt-1">
+                            <span>Music</span>
+                            <span>Speech</span>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <!-- Track Details -->
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+                <h2 class="text-xl font-headline font-bold text-gray-900 mb-6 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-green-600">music_note</span>
+                    Track Details
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <!-- Loudness -->
+                    <div>
+                        <label class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-semibold text-gray-700">Loudness (dB)</span>
+                            <span class="text-lg font-bold text-green-600 font-mono" id="loudnessValue">-5</span>
+                        </label>
+                        <input type="range" id="loudness" min="-30" max="0" value="-5" step="0.1" class="w-full">
+                        <div class="flex justify-between text-xs text-gray-500 mt-1">
+                            <span>Quiet</span>
+                            <span>Loud</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Duration -->
+                    <div>
+                        <label class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-semibold text-gray-700">Duration (min)</span>
+                            <span class="text-lg font-bold text-green-600 font-mono" id="durationValue">3.5</span>
+                        </label>
+                        <input type="range" id="duration" min="1" max="10" value="3.5" step="0.1" class="w-full">
+                        <div class="flex justify-between text-xs text-gray-500 mt-1">
+                            <span>1 min</span>
+                            <span>10 min</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Year -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Release Year</label>
+                        <input type="number" id="year" min="1920" max="2030" value="2020" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 outline-none transition-all font-mono">
+                    </div>
+                    
+                    <!-- Key -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Key</label>
+                        <select id="key" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 outline-none transition-all">
+                            <option value="0">C</option>
+                            <option value="1">C#/Db</option>
+                            <option value="2">D</option>
+                            <option value="3">D#/Eb</option>
+                            <option value="4">E</option>
+                            <option value="5" selected>F</option>
+                            <option value="6">F#/Gb</option>
+                            <option value="7">G</option>
+                            <option value="8">G#/Ab</option>
+                            <option value="9">A</option>
+                            <option value="10">A#/Bb</option>
+                            <option value="11">B</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Mode -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Mode</label>
+                        <select id="mode" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 outline-none transition-all">
+                            <option value="0">Minor</option>
+                            <option value="1" selected>Major</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Time Signature -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Time Signature</label>
+                        <select id="timeSignature" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 outline-none transition-all">
+                            <option value="3">3/4</option>
+                            <option value="4" selected>4/4</option>
+                            <option value="5">5/4</option>
+                            <option value="6">6/8</option>
+                            <option value="7">7/8</option>
+                        </select>
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <!-- Predict Button -->
+            <button onclick="predictAll()" class="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-[24px]">bolt</span>
+                Predict Track Success
+            </button>
+            
+        </div>
+        
+        <!-- RIGHT: Predictions -->
+        <div class="lg:col-span-1 space-y-6">
+            
+            <!-- Popularity Score -->
+            <div id="popularityCard" class="prediction-card bg-white rounded-xl p-6 shadow-sm border border-gray-200 hidden">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-purple-600 text-[24px]">star</span>
+                    </div>
+                    <div>
+                        <h3 class="font-headline font-bold text-gray-900">Popularity Score</h3>
+                        <p class="text-xs text-gray-500">0-100 scale</p>
+                    </div>
+                </div>
+                <div class="text-center mb-4">
+                    <div class="text-5xl font-bold text-purple-600 font-mono" id="popularityScore">--</div>
+                    <p class="text-sm text-gray-600 mt-2" id="popularityInterpretation">--</p>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-3">
+                    <div id="popularityBar" class="bg-gradient-to-r from-purple-500 to-pink-500 h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+            </div>
+            
+            <!-- Hit Classification -->
+            <div id="hitCard" class="prediction-card bg-white rounded-xl p-6 shadow-sm border border-gray-200 hidden">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-green-600 text-[24px]">local_fire_department</span>
+                    </div>
+                    <div>
+                        <h3 class="font-headline font-bold text-gray-900">Hit Potential</h3>
+                        <p class="text-xs text-gray-500">Classification</p>
+                    </div>
+                </div>
+                <div class="text-center mb-4">
+                    <div class="text-3xl font-bold font-mono mb-2" id="hitLabel">--</div>
+                    <div class="flex items-center justify-center gap-2">
+                        <span class="text-sm text-gray-600">Confidence:</span>
+                        <span class="text-2xl font-bold text-green-600 font-mono" id="hitConfidence">--</span>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                    <div class="p-2 rounded bg-red-50 text-center">
+                        <div class="text-gray-600">Flop</div>
+                        <div class="font-bold text-red-600 font-mono" id="hitProbFlop">--</div>
+                    </div>
+                    <div class="p-2 rounded bg-green-50 text-center">
+                        <div class="text-gray-600">Hit</div>
+                        <div class="font-bold text-green-600 font-mono" id="hitProbHit">--</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Danceability -->
+            <div id="danceCard" class="prediction-card bg-white rounded-xl p-6 shadow-sm border border-gray-200 hidden">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-blue-600 text-[24px]">celebration</span>
+                    </div>
+                    <div>
+                        <h3 class="font-headline font-bold text-gray-900">Danceability</h3>
+                        <p class="text-xs text-gray-500">Predicted score</p>
+                    </div>
+                </div>
+                <div class="text-center mb-4">
+                    <div class="text-5xl font-bold text-blue-600 font-mono" id="danceScore">--</div>
+                    <p class="text-sm text-gray-600 mt-2" id="danceInterpretation">--</p>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-3">
+                    <div id="danceBar" class="bg-gradient-to-r from-blue-500 to-cyan-500 h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+            </div>
+            
+            <!-- Loading State -->
+            <div id="loadingCard" class="bg-white rounded-xl p-8 shadow-sm border border-gray-200 text-center hidden">
+                <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-green-500 mb-4"></div>
+                <p class="text-gray-600">Analyzing with AI models...</p>
+            </div>
+            
+            <!-- Initial State -->
+            <div id="initialCard" class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-8 shadow-sm border border-green-200 text-center">
+                <span class="material-symbols-outlined text-green-600 text-[48px] mb-4 inline-block">sensors</span>
+                <h3 class="font-headline font-bold text-gray-900 mb-2">Ready to Predict</h3>
+                <p class="text-sm text-gray-600">Adjust the audio features and click "Predict Track Success" to see AI-powered predictions.</p>
+            </div>
+            
+        </div>
+        
+    </div>
+    
+</main>
+
+<script>
+// API Base URL
+const API_BASE_URL = 'http://localhost:5000/api';
+
+// Update slider values
+document.querySelectorAll('input[type="range"]').forEach(slider => {
+    const valueSpan = document.getElementById(slider.id + 'Value');
+    
+    slider.addEventListener('input', () => {
+        let value = slider.value;
+        if (slider.id === 'tempo') {
+            valueSpan.textContent = Math.round(value);
+        } else if (slider.id === 'loudness') {
+            valueSpan.textContent = parseFloat(value).toFixed(1);
+        } else if (slider.id === 'duration') {
+            valueSpan.textContent = parseFloat(value).toFixed(1);
+        } else {
+            valueSpan.textContent = parseFloat(value).toFixed(2);
+        }
+    });
+});
+
+// Collect form data
+function getFormData() {
+    const durationMin = parseFloat(document.getElementById('duration').value);
+    
+    return {
+        tempo: parseFloat(document.getElementById('tempo').value),
+        energy: parseFloat(document.getElementById('energy').value),
+        danceability: parseFloat(document.getElementById('danceability').value),
+        valence: parseFloat(document.getElementById('valence').value),
+        acousticness: parseFloat(document.getElementById('acousticness').value),
+        instrumentalness: parseFloat(document.getElementById('instrumentalness').value),
+        liveness: parseFloat(document.getElementById('liveness').value),
+        speechiness: parseFloat(document.getElementById('speechiness').value),
+        loudness: parseFloat(document.getElementById('loudness').value),
+        duration_ms: durationMin * 60000,
+        year: parseInt(document.getElementById('year').value),
+        key: parseInt(document.getElementById('key').value),
+        mode: parseInt(document.getElementById('mode').value),
+        time_signature: parseInt(document.getElementById('timeSignature').value)
+    };
+}
+
+// Predict all
+async function predictAll() {
+    // Hide all cards
+    document.getElementById('initialCard').classList.add('hidden');
+    document.getElementById('popularityCard').classList.add('hidden');
+    document.getElementById('hitCard').classList.add('hidden');
+    document.getElementById('danceCard').classList.add('hidden');
+    
+    // Show loading
+    document.getElementById('loadingCard').classList.remove('hidden');
+    
+    try {
+        const data = getFormData();
+        
+        const response = await fetch(`${API_BASE_URL}/predict/all`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        
+        if (!result.success) {
+            throw new Error(result.error || 'Prediction failed');
+        }
+        
+        // Hide loading
+        document.getElementById('loadingCard').classList.add('hidden');
+        
+        // Show results
+        const predictions = result.predictions;
+        
+        // Popularity
+        if (predictions.popularity && !predictions.popularity.error) {
+            document.getElementById('popularityScore').textContent = predictions.popularity.score;
+            document.getElementById('popularityInterpretation').textContent = predictions.popularity.interpretation;
+            document.getElementById('popularityBar').style.width = predictions.popularity.score + '%';
+            document.getElementById('popularityCard').classList.remove('hidden');
+            document.getElementById('popularityCard').classList.add('fade-in');
+        }
+        
+        // Hit Classification
+        if (predictions.hit_classification && !predictions.hit_classification.error) {
+            const isHit = predictions.hit_classification.is_hit;
+            const prob = predictions.hit_classification.probability;
+            const conf = predictions.hit_classification.confidence;
+            
+            document.getElementById('hitLabel').textContent = isHit ? '🔥 HIT' : '❌ FLOP';
+            document.getElementById('hitLabel').className = `text-3xl font-bold font-mono mb-2 ${isHit ? 'text-green-600' : 'text-red-600'}`;
+            document.getElementById('hitConfidence').textContent = (conf * 100).toFixed(1) + '%';
+            document.getElementById('hitProbFlop').textContent = ((1 - prob) * 100).toFixed(1) + '%';
+            document.getElementById('hitProbHit').textContent = (prob * 100).toFixed(1) + '%';
+            document.getElementById('hitCard').classList.remove('hidden');
+            document.getElementById('hitCard').classList.add('fade-in');
+        }
+        
+        // Danceability
+        if (predictions.danceability && !predictions.danceability.error) {
+            document.getElementById('danceScore').textContent = predictions.danceability.score.toFixed(2);
+            document.getElementById('danceInterpretation').textContent = getDanceInterpretation(predictions.danceability.score);
+            document.getElementById('danceBar').style.width = (predictions.danceability.score * 100) + '%';
+            document.getElementById('danceCard').classList.remove('hidden');
+            document.getElementById('danceCard').classList.add('fade-in');
+        }
+        
+    } catch (error) {
+        console.error('Prediction error:', error);
+        document.getElementById('loadingCard').classList.add('hidden');
+        document.getElementById('initialCard').classList.remove('hidden');
+        alert('Prediction failed: ' + error.message + '\n\nMake sure API server is running on port 5000 and models are trained.');
+    }
+}
+
+function getDanceInterpretation(score) {
+    if (score >= 0.8) return "Extremely Danceable 💃";
+    if (score >= 0.6) return "Highly Danceable 🕺";
+    if (score >= 0.4) return "Moderately Danceable 🎵";
+    if (score >= 0.2) return "Low Danceability 🎼";
+    return "Not Danceable 🎹";
+}
+
+// Auto-predict on load with default values (optional)
+// window.onload = () => setTimeout(predictAll, 1000);
+</script>
+
+</body>
+</html>

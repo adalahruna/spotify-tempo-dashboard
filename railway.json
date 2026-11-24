@@ -1,0 +1,10 @@
+﻿{
+  "build": {
+    "builder": "NIXPACKS"
+  },
+  "deploy": {
+    "startCommand": "gunicorn api.search_api:app --bind 0.0.0.0:$PORT --timeout 120 --workers 2",
+    "healthcheckPath": "/",
+    "restartPolicyType": "ON_FAILURE"
+  }
+}

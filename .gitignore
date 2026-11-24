@@ -1,8 +1,3 @@
-# Environment Variables
-.env
-.env.local
-.env.production
-
 # Python
 __pycache__/
 *.py[cod]
@@ -12,76 +7,47 @@ __pycache__/
 env/
 venv/
 ENV/
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
 *.egg-info/
-.installed.cfg
+dist/
+build/
 *.egg
+
+# Models (too large for Git - upload separately to Railway)
+models/*.pkl
+models/*.json
+
+# Environment variables
+.env
+.env.local
+.env.production
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
-*~
 
 # OS
 .DS_Store
 Thumbs.db
+desktop.ini
 
 # Logs
 *.log
 logs/
 
 # Database
-*.db
 *.sqlite
-*.sqlite3
-*.dump
-*.sql
+*.db
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# Testing
+.pytest_cache/
+htmlcov/
+.coverage
 
 # Temporary files
 *.tmp
 temp/
-tmp/
-
-# Firebase
-firebase-debug.log
-.firebase/
-firebase-credentials.json
-
-# Deployment
-.vercel/
-.netlify/
-
-# Large CSV files (optional - comment out if you want to include)
-*.csv
-data/
-
-# Backup files
-*.bak
-*.backup
-
-# pytest
-.pytest_cache/
-.coverage
-htmlcov/
-
-# Jupyter Notebook
-.ipynb_checkpoints/
-*.ipynb
-
-# Node modules (jika ada)
-node_modules/
-package-lock.json
-

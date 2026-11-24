@@ -16,6 +16,7 @@
 - 📖 [Full Deployment Guide](DEPLOYMENT.md)
 - ⚡ [5-Minute Quick Deploy](QUICK_DEPLOY.md)
 - 🧪 [Test Production Locally](TEST_PRODUCTION.md)
+- 🤖 [ML Models Documentation](ML_MODELS.md) ⭐ **NEW: AI Predictions**
 - 🎨 [Live Dashboard Demo](#) *(coming soon)*
 
 ---

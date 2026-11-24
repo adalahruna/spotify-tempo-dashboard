@@ -170,6 +170,13 @@
                 <a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors font-body-md text-body-md" data-path="search-and-query" href="#">
                     <span class="material-symbols-outlined text-[18px]">manage_search</span>Search & Query
                 </a>
+                <a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors font-body-md text-body-md" data-path="ml-predictions" href="#">
+                    <span class="material-symbols-outlined text-[18px]">psychology</span>
+                    <span class="flex items-center gap-1.5">
+                        ML Predictions
+                        <span class="inline-flex items-center justify-center w-4 h-4 text-[9px] font-bold rounded-full bg-secondary text-on-secondary">AI</span>
+                    </span>
+                </a>
                 <a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors font-body-md text-body-md" data-path="tempo-zones" href="#">
                     <span class="material-symbols-outlined text-[18px]">speed</span>Tempo Zones
                 </a>
@@ -229,6 +236,12 @@
             <nav class="hidden xl:flex items-center gap-1 bg-surface-container-low/60 p-1 rounded-full border border-surface-container-high">
                 <a aria-current="page" class="px-space-md py-1.5 rounded-full font-label-md text-label-md transition-colors bg-primary text-on-primary font-bold shadow-sm" data-path="overview" href="#">Overview</a>
                 <a class="px-space-md py-1.5 rounded-full font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="search-and-query" href="#">Search & Query</a>
+                <a class="px-space-md py-1.5 rounded-full font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="ml-predictions" href="#">
+                    <span class="flex items-center gap-1.5">
+                        ML Predictions
+                        <span class="inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold rounded-full bg-secondary text-on-secondary">AI</span>
+                    </span>
+                </a>
                 <a class="px-space-md py-1.5 rounded-full font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="tempo-zones" href="#">Tempo Zones</a>
                 <a class="px-space-md py-1.5 rounded-full font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="top-tracks" href="#">Top Tracks</a>
                 <a class="px-space-md py-1.5 rounded-full font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="methodology" href="#">Methodology</a>
@@ -251,7 +264,7 @@
         <div class="flex flex-col w-full gap-space-lg pb-12">
 
 <!-- Top Search & Filter Bar (README v2.0) -->
-<section class="w-full bg-surface-container-lowest rounded-xl p-space-md shadow-[0_1px_4px_rgba(15,23,42,0.04)] flex flex-col gap-space-md">
+<section id="overviewSection" class="w-full bg-surface-container-lowest rounded-xl p-space-md shadow-[0_1px_4px_rgba(15,23,42,0.04)] flex flex-col gap-space-md">
     <div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-space-md">
         <div class="flex-1 flex items-center bg-surface-container-low rounded-xl px-space-md py-2.5 focus-within:ring-2 focus-within:ring-primary/20 transition-all">
             <span class="material-symbols-outlined text-[20px] text-on-surface-variant mr-space-sm">search</span>
@@ -295,7 +308,7 @@
 </section>
 
 <!-- 4 Summary Metric Cards (README spec) -->
-<section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-space-md">
+<section id="summaryCardsSection" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-space-md">
     <!-- Card 1: Total Tracks -->
     <div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-[0_1px_4px_rgba(15,23,42,0.03)] flex flex-col justify-between group hover:shadow-md transition-shadow">
         <div class="flex items-center justify-between mb-space-sm">
@@ -334,36 +347,91 @@
     <div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-[0_1px_4px_rgba(15,23,42,0.03)] flex flex-col justify-between group hover:shadow-md transition-shadow relative overflow-hidden">
         <div class="absolute -right-6 -bottom-6 w-24 h-24 rounded-full bg-secondary-container/20 pointer-events-none"></div>
         <div class="flex items-center justify-between mb-space-sm">
-            <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Sweet Spot %</span>
+            <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">100-120 BPM Range</span>
             <span class="px-2 py-0.5 rounded-full bg-secondary-container/50 text-on-secondary-fixed-variant font-label-sm text-label-sm font-bold">266K Songs</span>
         </div>
         <div class="flex items-baseline gap-2 mb-1">
             <span class="font-headline-xl text-headline-xl text-primary tracking-tight font-bold" id="sweetSpotPct">22.18%</span>
-            <span class="font-label-sm text-label-sm text-secondary font-semibold">±1.4% decade drift</span>
+            <span class="font-label-sm text-label-sm text-on-surface-variant font-semibold">of corpus</span>
         </div>
         <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
-            Tracks in 100–120 BPM zone • High temporal stability across eras
+            Tracks in 100–120 BPM zone • Correlation with danceability observed
         </p>
     </div>
     
-    <!-- Card 4: Danceability Boost -->
+    <!-- Card 4: ML Model Performance -->
     <div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-[0_1px_4px_rgba(15,23,42,0.03)] flex flex-col justify-between group hover:shadow-md transition-shadow relative overflow-hidden">
         <div class="flex items-center justify-between mb-space-sm">
-            <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Danceability Boost</span>
-            <span class="px-2 py-0.5 rounded-full bg-primary text-on-primary font-label-sm text-label-sm">Hypothesis Validated</span>
+            <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">ML Prediction</span>
+            <span class="px-2 py-0.5 rounded-full bg-primary text-on-primary font-label-sm text-label-sm">AI-Powered</span>
         </div>
         <div class="flex items-baseline gap-2 mb-1">
-            <span class="font-headline-xl text-headline-xl text-on-surface tracking-tight" id="danceBoost">+13.37%</span>
-            <span class="material-symbols-outlined text-[20px] text-primary">trending_up</span>
+            <span class="font-headline-xl text-headline-xl text-on-surface tracking-tight" id="danceBoost">93.1%</span>
+            <span class="material-symbols-outlined text-[20px] text-primary">psychology</span>
         </div>
         <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
-            Sweet spot advantage vs other tempo zones (0.641 vs 0.565 baseline)
+            Popularity prediction accuracy (R² score) • 4 ML models trained
         </p>
     </div>
 </section>
 
+<!-- ML PREDICTIONS SECTION (AI-Powered Analysis) -->
+<section id="mlPredictionsSection" class="hidden bg-gradient-to-br from-secondary-container/10 via-surface-container-lowest to-primary-container/5 rounded-xl p-space-lg shadow-[0_2px_12px_rgba(0,110,45,0.08)] border border-primary/10" style="display: none;">
+    <div class="flex items-center justify-between mb-space-md">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                <span class="material-symbols-outlined text-[24px] text-primary">psychology</span>
+            </div>
+            <div>
+                <div class="flex items-center gap-2">
+                    <h2 class="font-headline-md text-headline-md text-on-surface tracking-tight">ML Predictions</h2>
+                    <span class="inline-flex items-center justify-center px-2 py-0.5 text-[10px] font-bold rounded-full bg-secondary text-on-secondary uppercase tracking-wider">AI</span>
+                </div>
+                <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">4 trained models analyzing 100K tracks • 93% accuracy</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-2">
+            <span class="px-3 py-1 rounded-full bg-primary/10 text-primary font-label-sm text-label-sm font-semibold flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                Models Ready
+            </span>
+        </div>
+    </div>
+    
+    <!-- Embedded ML Predictions Interface -->
+    <div class="bg-surface-container-lowest rounded-lg overflow-hidden shadow-inner">
+        <iframe 
+            src="predict.html" 
+            class="w-full border-0" 
+            style="height: 900px; display: block;"
+            title="ML Predictions Interface"
+            loading="lazy"
+        ></iframe>
+    </div>
+    
+    <!-- Model Performance Summary -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-sm mt-space-md">
+        <div class="bg-surface-container-low/50 rounded-lg p-3 flex flex-col">
+            <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Popularity Predictor</span>
+            <span class="font-headline-sm text-headline-sm text-primary font-bold mt-1">93.1% R²</span>
+        </div>
+        <div class="bg-surface-container-low/50 rounded-lg p-3 flex flex-col">
+            <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Hit Classifier</span>
+            <span class="font-headline-sm text-headline-sm text-primary font-bold mt-1">92.9% Acc</span>
+        </div>
+        <div class="bg-surface-container-low/50 rounded-lg p-3 flex flex-col">
+            <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Danceability</span>
+            <span class="font-headline-sm text-headline-sm text-primary font-bold mt-1">66.7% R²</span>
+        </div>
+        <div class="bg-surface-container-low/50 rounded-lg p-3 flex flex-col">
+            <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Tempo Optimizer</span>
+            <span class="font-headline-sm text-headline-sm text-primary font-bold mt-1">19.4% R²</span>
+        </div>
+    </div>
+</section>
+
 <!-- Main Content Layout (12 cols: 8 left, 4 right) -->
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<div id="mainContentSection" class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
 
 <!-- LEFT COLUMN (8 cols) -->
 <div class="lg:col-span-8 flex flex-col gap-space-lg">
@@ -374,7 +442,7 @@
         <div>
             <div class="flex items-center gap-2">
                 <h2 class="font-headline-md text-headline-md text-on-surface tracking-tight">Tempo Zone Distribution & Density</h2>
-                <span class="px-2 py-0.5 rounded-full bg-surface-container-low font-label-sm text-label-sm text-on-surface-variant">1.2M Corpus</span>
+                <span class="px-2 py-0.5 rounded-full bg-surface-container-low font-label-sm text-label-sm text-on-surface-variant">Descriptive Analysis</span>
             </div>
             <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5" id="sweetSpotPctViz">Discrete dot-matrix density map comparing tempo brackets</p>
         </div>
@@ -399,9 +467,9 @@
     <div class="bg-secondary-container/20 rounded-lg p-space-md flex items-start gap-space-sm">
         <span class="material-symbols-outlined text-primary text-[22px] shrink-0 mt-0.5">verified</span>
         <div class="flex flex-col gap-0.5">
-            <span class="font-label-lg text-label-lg text-on-surface font-bold">Sweet Spot Hypothesis Validated</span>
+            <span class="font-label-lg text-label-lg text-on-surface font-bold">Correlation Observed</span>
             <p class="font-body-md text-body-md text-on-surface-variant">
-                Tracks between <strong>100–120 BPM</strong> show a consistent <span class="text-primary font-bold" id="infoBoost">+13.37%</span> danceability boost over other zones across 100 years of recorded music, matching natural human walking cadence and heart rate elevation.
+                Tracks between <strong>100–120 BPM</strong> show correlation with higher danceability scores. This is a <em>descriptive finding</em>, not proof of causation.
             </p>
         </div>
     </div>
@@ -532,6 +600,248 @@
 </section>
 
 </div>
+
+</div>
+
+<!-- TOP TRACKS SECTION (Hidden by default) -->
+<section id="topTracksSection" class="hidden w-full" style="display: none;">
+    <div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-[0_1px_4px_rgba(15,23,42,0.03)]">
+        <div class="flex items-center justify-between mb-space-md">
+            <div>
+                <h2 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Top Tracks Analysis</h2>
+                <p class="font-body-md text-body-md text-on-surface-variant mt-1">Most popular tracks across all tempo ranges</p>
+            </div>
+            <div class="flex items-center gap-2">
+                <button class="px-space-md py-2 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md transition-colors flex items-center gap-1.5" onclick="filterTopTracks('all')" id="btnAllTracks">
+                    <span class="material-symbols-outlined text-[18px]">library_music</span>
+                    All Tracks
+                </button>
+                <button class="px-space-md py-2 rounded-lg bg-primary text-on-primary font-label-md font-bold transition-colors flex items-center gap-1.5" onclick="filterTopTracks('sweet-spot')" id="btnSweetSpot">
+                    <span class="material-symbols-outlined text-[18px]">star</span>
+                    Sweet Spot Only
+                </button>
+            </div>
+        </div>
+        
+        <!-- Filters -->
+        <div class="flex flex-wrap items-center gap-space-sm mb-space-md">
+            <span class="font-label-sm text-label-sm text-on-surface-variant uppercase font-semibold">Sort by:</span>
+            <button class="px-3 py-1.5 rounded-full bg-primary text-on-primary font-label-sm font-bold" onclick="sortTopTracks('danceability')" id="sortDance">Danceability</button>
+            <button class="px-3 py-1.5 rounded-full bg-surface-container-low text-on-surface-variant hover:bg-surface-container font-label-sm transition-colors" onclick="sortTopTracks('energy')" id="sortEnergy">Energy</button>
+            <button class="px-3 py-1.5 rounded-full bg-surface-container-low text-on-surface-variant hover:bg-surface-container font-label-sm transition-colors" onclick="sortTopTracks('tempo')" id="sortTempo">Tempo</button>
+            <button class="px-3 py-1.5 rounded-full bg-surface-container-low text-on-surface-variant hover:bg-surface-container font-label-sm transition-colors" onclick="sortTopTracks('year')" id="sortYear">Year</button>
+        </div>
+        
+        <!-- Table -->
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+                        <th class="py-3 px-4 rounded-l-lg">#</th>
+                        <th class="py-3 px-4">Track</th>
+                        <th class="py-3 px-4">Artist</th>
+                        <th class="py-3 px-4 text-center">Year</th>
+                        <th class="py-3 px-4 text-center">Tempo</th>
+                        <th class="py-3 px-4 text-center">Energy</th>
+                        <th class="py-3 px-4 text-center">Danceability</th>
+                        <th class="py-3 px-4 text-center rounded-r-lg">Zone</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-surface-container-high font-body-md text-on-surface" id="topTracksTableBody">
+                    <tr>
+                        <td colspan="8" class="py-12 text-center">
+                            <span class="material-symbols-outlined text-5xl text-on-surface-variant mb-2">hourglass_empty</span>
+                            <p class="font-body-lg text-on-surface-variant">Loading top tracks...</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Pagination -->
+        <div class="flex items-center justify-between mt-space-md pt-space-md border-t border-surface-container-high">
+            <span class="font-body-sm text-on-surface-variant" id="topTracksCount">Showing 0 of 0 tracks</span>
+            <div class="flex items-center gap-2">
+                <button class="px-3 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-sm transition-colors" onclick="loadMoreTopTracks()">
+                    Load More
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- TEMPO ZONES SECTION (Hidden by default) -->
+<section id="tempoZonesSection" class="hidden w-full" style="display: none;">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-space-lg">
+        <!-- Zone Cards -->
+        <div class="lg:col-span-2">
+            <div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-[0_1px_4px_rgba(15,23,42,0.03)]">
+                <h2 class="font-headline-lg text-headline-lg text-on-surface tracking-tight mb-space-md">Tempo Zones Distribution</h2>
+                
+                <!-- Zone Cards Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-space-md" id="tempoZonesGrid">
+                    <!-- Will be populated by JS -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Insights -->
+        <div class="flex flex-col gap-space-md">
+            <div class="bg-gradient-to-br from-primary-container/20 to-secondary-container/10 rounded-xl p-space-lg">
+                <div class="flex items-center gap-2 mb-space-sm">
+                    <span class="material-symbols-outlined text-[24px] text-primary">analytics</span>
+                    <h3 class="font-headline-md text-headline-md text-on-surface">Observed Pattern</h3>
+                </div>
+                <p class="font-body-lg text-body-lg text-on-surface leading-relaxed mb-space-sm">
+                    The <strong class="text-primary">100-120 BPM range</strong> shows correlation with higher danceability scores. This is a <em>descriptive observation</em>, not causal proof.
+                </p>
+                <div class="bg-surface-container-lowest/50 rounded-lg p-3 flex items-center justify-between">
+                    <span class="font-label-md text-label-md text-on-surface-variant">Observed Difference</span>
+                    <span class="font-headline-md text-headline-md text-primary font-bold">+13.4%</span>
+                </div>
+            </div>
+            
+            <div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-[0_1px_4px_rgba(15,23,42,0.03)]">
+                <h3 class="font-headline-sm text-headline-sm text-on-surface mb-space-sm">Distribution Stats</h3>
+                <div class="flex flex-col gap-2" id="tempoZonesStats">
+                    <!-- Will be populated by JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- METHODOLOGY SECTION (Hidden by default) -->
+<section id="methodologySection" class="hidden w-full" style="display: none;">
+    <div class="bg-surface-container-lowest rounded-xl p-space-xl shadow-[0_1px_4px_rgba(15,23,42,0.03)]">
+        <div class="max-w-4xl mx-auto">
+            <!-- Header -->
+            <div class="mb-space-xl">
+                <div class="flex items-center gap-3 mb-space-sm">
+                    <span class="material-symbols-outlined text-[32px] text-primary">science</span>
+                    <h2 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Research Methodology</h2>
+                </div>
+                <p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+                    This dashboard presents findings from analysis of 1.2 million Spotify tracks spanning 100 years (1920-2020), examining the relationship between tempo and danceability.
+                </p>
+            </div>
+            
+            <!-- Data Source -->
+            <div class="mb-space-lg">
+                <h3 class="font-headline-md text-headline-md text-on-surface mb-space-sm flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[20px] text-primary">database</span>
+                    Data Source & Collection
+                </h3>
+                <div class="bg-surface-container-low rounded-lg p-space-md space-y-3">
+                    <div class="flex items-start gap-3">
+                        <span class="material-symbols-outlined text-primary mt-0.5">check_circle</span>
+                        <div>
+                            <p class="font-body-md text-body-md text-on-surface font-bold">Dataset Size</p>
+                            <p class="font-body-sm text-body-sm text-on-surface-variant">1,204,025 tracks collected via Spotify Web API</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <span class="material-symbols-outlined text-primary mt-0.5">check_circle</span>
+                        <div>
+                            <p class="font-body-md text-body-md text-on-surface font-bold">Time Range</p>
+                            <p class="font-body-sm text-body-sm text-on-surface-variant">100 years of music history (1920-2020)</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <span class="material-symbols-outlined text-primary mt-0.5">check_circle</span>
+                        <div>
+                            <p class="font-body-md text-body-md text-on-surface font-bold">Audio Features</p>
+                            <p class="font-body-sm text-body-sm text-on-surface-variant">14 features extracted: tempo, energy, danceability, valence, acousticness, instrumentalness, liveness, speechiness, loudness, duration, year, key, mode, time signature</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Analysis Method -->
+            <div class="mb-space-lg">
+                <h3 class="font-headline-md text-headline-md text-on-surface mb-space-sm flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[20px] text-primary">analytics</span>
+                    Analysis Methodology
+                </h3>
+                <div class="space-y-4">
+                    <div class="bg-surface-container-low rounded-lg p-space-md">
+                        <h4 class="font-label-lg text-label-lg text-on-surface font-bold mb-2">1. Tempo Categorization</h4>
+                        <p class="font-body-md text-body-md text-on-surface-variant mb-2">
+                            Tracks grouped into 5 tempo zones based on music theory and psychoacoustic research:
+                        </p>
+                        <ul class="space-y-1 font-body-sm text-body-sm text-on-surface-variant ml-4">
+                            <li>• <strong>&lt; 80 BPM</strong>: Slow/Ballad zone</li>
+                            <li>• <strong>80-100 BPM</strong>: Moderate zone</li>
+                            <li>• <strong class="text-primary">100-120 BPM</strong>: Sweet Spot (optimal danceability)</li>
+                            <li>• <strong>120-140 BPM</strong>: Upbeat/Club zone</li>
+                            <li>• <strong>&gt; 140 BPM</strong>: Fast/Electronic zone</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-surface-container-low rounded-lg p-space-md">
+                        <h4 class="font-label-lg text-label-lg text-on-surface font-bold mb-2">2. Statistical Analysis</h4>
+                        <p class="font-body-md text-body-md text-on-surface-variant">
+                            Danceability scores compared across tempo zones using mean, median, and standard deviation. Hypothesis testing performed with 95% confidence interval.
+                        </p>
+                    </div>
+                    
+                    <div class="bg-surface-container-low rounded-lg p-space-md">
+                        <h4 class="font-label-lg text-label-lg text-on-surface font-bold mb-2">3. Machine Learning Models</h4>
+                        <p class="font-body-md text-body-md text-on-surface-variant mb-2">
+                            Trained 4 prediction models on 100,000 tracks using scikit-learn:
+                        </p>
+                        <ul class="space-y-1 font-body-sm text-body-sm text-on-surface-variant ml-4">
+                            <li>• <strong>Random Forest Regressor</strong>: Popularity prediction (R²=93.1%)</li>
+                            <li>• <strong>Random Forest Classifier</strong>: Hit/Flop classification (Acc=92.9%)</li>
+                            <li>• <strong>Gradient Boosting</strong>: Danceability prediction (R²=66.7%)</li>
+                            <li>• <strong>Random Forest</strong>: Tempo optimization (R²=19.4%)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Technology Stack -->
+            <div class="mb-space-lg">
+                <h3 class="font-headline-md text-headline-md text-on-surface mb-space-sm flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[20px] text-primary">code</span>
+                    Technology Stack
+                </h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div class="bg-surface-container-low rounded-lg p-3 text-center">
+                        <p class="font-label-md text-label-md text-on-surface font-bold">PostgreSQL</p>
+                        <p class="font-body-sm text-body-sm text-on-surface-variant">Database</p>
+                    </div>
+                    <div class="bg-surface-container-low rounded-lg p-3 text-center">
+                        <p class="font-label-md text-label-md text-on-surface font-bold">Python</p>
+                        <p class="font-body-sm text-body-sm text-on-surface-variant">Backend & ML</p>
+                    </div>
+                    <div class="bg-surface-container-low rounded-lg p-3 text-center">
+                        <p class="font-label-md text-label-md text-on-surface font-bold">Flask</p>
+                        <p class="font-body-sm text-body-sm text-on-surface-variant">API Server</p>
+                    </div>
+                    <div class="bg-surface-container-low rounded-lg p-3 text-center">
+                        <p class="font-label-md text-label-md text-on-surface font-bold">scikit-learn</p>
+                        <p class="font-body-sm text-body-sm text-on-surface-variant">ML Models</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Limitations -->
+            <div class="bg-secondary-container/10 rounded-lg p-space-md border border-secondary-container/30">
+                <h3 class="font-headline-sm text-headline-sm text-on-surface mb-space-sm flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[18px] text-on-surface-variant">info</span>
+                    Limitations & Considerations
+                </h3>
+                <ul class="space-y-2 font-body-sm text-body-sm text-on-surface-variant">
+                    <li>• Danceability is Spotify's proprietary metric based on algorithmic analysis</li>
+                    <li>• Dataset limited to tracks available on Spotify platform</li>
+                    <li>• Cultural and genre biases may exist in tempo-danceability correlation</li>
+                    <li>• ML models trained on synthetic popularity scores (actual popularity data not available)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
 
 </div>
 
