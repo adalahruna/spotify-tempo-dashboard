@@ -442,38 +442,6 @@ document.addEventListener('DOMContentLoaded', () => {
 // SEARCH FUNCTIONALITY (PostgreSQL API)
 // ============================================
 
-// ============================================
-// API CONFIGURATION - AUTO-DETECT ENVIRONMENT
-// ============================================
-
-const getApiBaseUrl = () => {
-    // Check if running on production (Vercel)
-    if (typeof window !== 'undefined') {
-        const hostname = window.location.hostname;
-        
-        // Vercel production or preview
-        if (hostname.includes('vercel.app') || hostname.includes('.app')) {
-            console.log('🌐 Environment: Vercel Production');
-            return '/api'; // Use Vercel proxy/rewrite
-        }
-        
-        // Custom domain
-        if (!hostname.includes('localhost') && !hostname.includes('127.0.0.1')) {
-            console.log('🌐 Environment: Custom Domain');
-            return '/api'; // Use proxy
-        }
-    }
-    
-    // Development environment
-    console.log('🌐 Environment: Local Development');
-    return 'http://localhost:5000/api';
-};
-
-const API_BASE_URL = getApiBaseUrl();
-console.log('📡 API Base URL:', API_BASE_URL);
-let isSearchActive = false;
-let originalTopTracks = [];
-
 async function performSearch() {
     const searchQuery = document.getElementById('searchInput').value.trim();
     const tempoMin = document.getElementById('tempoMin').value;
