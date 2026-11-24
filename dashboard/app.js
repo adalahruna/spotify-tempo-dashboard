@@ -21,10 +21,8 @@ const db = firebase.firestore();
 // GLOBAL VARIABLES
 // ============================================
 
-// API Base URL - detect environment
-const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? 'http://localhost:5000/api'  // Local development
-    : '/api';  // Production (Vercel proxies to Railway)
+// API Base URL - ALWAYS use localhost:5000 for local dev
+const API_BASE_URL = 'http://localhost:5000/api';
 
 console.log('🌐 API Base URL:', API_BASE_URL);
 

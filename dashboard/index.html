@@ -107,18 +107,18 @@
                         "label-md": ["JetBrains Mono"]
                     },
                     fontSize: {
-                        "headline-lg-mobile": ["24px", { "lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
-                        "label-sm": ["10px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "500" }],
-                        "headline-sm": ["18px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "600" }],
-                        "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
-                        "headline-md": ["22px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
-                        "headline-lg": ["32px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
-                        "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }],
-                        "body-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "400" }],
-                        "headline-xl-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
-                        "headline-xl": ["44px", { "lineHeight": "52px", "letterSpacing": "-0.03em", "fontWeight": "700" }],
-                        "label-lg": ["13px", { "lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "600" }],
-                        "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }]
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+                        "label-sm": ["10px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "headline-sm": ["18px", { "lineHeight": "26px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "26px", "letterSpacing": "0.015em", "fontWeight": "400" }],
+                        "headline-md": ["22px", { "lineHeight": "30px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "42px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "22px", "letterSpacing": "0.015em", "fontWeight": "400" }],
+                        "body-sm": ["12px", { "lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "400" }],
+                        "headline-xl-mobile": ["32px", { "lineHeight": "44px", "letterSpacing": "0.01em", "fontWeight": "700" }],
+                        "headline-xl": ["44px", { "lineHeight": "56px", "letterSpacing": "0.005em", "fontWeight": "700" }],
+                        "label-lg": ["13px", { "lineHeight": "20px", "letterSpacing": "0.03em", "fontWeight": "600" }],
+                        "label-md": ["12px", { "lineHeight": "18px", "letterSpacing": "0.03em", "fontWeight": "500" }]
                     }
                 }
             }
@@ -134,10 +134,56 @@
         }
         ::-webkit-scrollbar { display: none; }
         
-        /* Font smoothing */
+        /* Better Typography - Fix spacing and readability */
         * {
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+        
+        /* Override tight spacing with more breathable defaults */
+        body {
+            letter-spacing: 0.01em;
+            word-spacing: 0.05em;
+            line-height: 1.6;
+        }
+        
+        /* Headings need more breathing room */
+        h1, h2, h3, h4, h5, h6,
+        .font-headline-xl, .font-headline-lg, .font-headline-md, .font-headline-sm {
+            letter-spacing: 0.01em !important;
+            word-spacing: 0.08em;
+            line-height: 1.4;
+        }
+        
+        /* Body text should be comfortable to read */
+        p, .font-body-lg, .font-body-md, .font-body-sm {
+            letter-spacing: 0.015em !important;
+            word-spacing: 0.1em;
+            line-height: 1.65;
+        }
+        
+        /* Labels and UI text */
+        .font-label-lg, .font-label-md, .font-label-sm {
+            letter-spacing: 0.03em !important;
+            word-spacing: 0.05em;
+        }
+        
+        /* Monospace should maintain original spacing */
+        code, pre, .font-mono {
+            letter-spacing: 0;
+            word-spacing: 0;
+        }
+        
+        /* Tables need more padding */
+        table td, table th {
+            padding: 1rem 0.75rem !important;
+        }
+        
+        /* Buttons and interactive elements */
+        button {
+            letter-spacing: 0.025em;
+            word-spacing: 0.05em;
         }
     </style>
 </head>
