@@ -49,6 +49,14 @@ try:
 except Exception as e:
     print(f"⚠️  ML Prediction endpoints not available: {e}")
 
+# Import and register recommendation blueprint
+try:
+    from recommendation_api import recommend_bp
+    app.register_blueprint(recommend_bp, url_prefix='/api')
+    print("✅ Recommendation endpoints loaded")
+except Exception as e:
+    print(f"⚠️  Recommendation endpoints not available: {e}")
+
 # PostgreSQL connection config - gunakan env variables atau DATABASE_URL
 DATABASE_URL = os.getenv('DATABASE_URL')
 
