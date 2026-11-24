@@ -294,9 +294,9 @@ def get_summary_stats():
         sql = """
             SELECT 
                 COUNT(*) as total_tracks,
-                ROUND(AVG(tempo), 2) as avg_tempo,
-                ROUND(AVG(danceability), 4) as avg_danceability,
-                ROUND(AVG(energy), 4) as avg_energy,
+                ROUND(AVG(tempo::numeric), 2) as avg_tempo,
+                ROUND(AVG(danceability::numeric), 4) as avg_danceability,
+                ROUND(AVG(energy::numeric), 4) as avg_energy,
                 SUM(CASE WHEN tempo >= 100 AND tempo < 120 THEN 1 ELSE 0 END) as sweet_spot_tracks,
                 ROUND(
                     SUM(CASE WHEN tempo >= 100 AND tempo < 120 THEN 1 ELSE 0 END)::NUMERIC / 

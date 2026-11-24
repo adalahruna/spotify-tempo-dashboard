@@ -21,6 +21,13 @@ const db = firebase.firestore();
 // GLOBAL VARIABLES
 // ============================================
 
+// API Base URL - detect environment
+const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:5000/api'  // Local development
+    : '/api';  // Production (Vercel proxies to Railway)
+
+console.log('🌐 API Base URL:', API_BASE_URL);
+
 // No Chart.js needed - using custom dot matrix visualization
 
 // ============================================
@@ -96,8 +103,12 @@ async function loadDashboardData() {
         const otherZones = tempoZonesData.filter(z => z.zone_id !== '100_120');
         const avgOtherDance = otherZones.reduce((sum, z) => sum + (z.avg_danceability || 0), 0) / otherZones.length;
         const boost = ((sweetSpot.avg_danceability - avgOtherDance) / avgOtherDance * 100).toFixed(1);
-        document.getElementById('danceBoost').textContent = `+${boost}%`;
-        document.getElementById('infoBoost').textContent = `+${boost}%`;
+        
+        // Update boost elements (with null checks)
+        const danceBoostEl = document.getElementById('danceBoost');
+        const infoBoostEl = document.getElementById('infoBoost');
+        if (danceBoostEl) danceBoostEl.textContent = `+${boost}%`;
+        if (infoBoostEl) infoBoostEl.textContent = `+${boost}%`;
 
         // 3. Render key findings
         const mockDecadeData = [];
@@ -123,18 +134,21 @@ async function loadDashboardData() {
     } catch (error) {
         console.error('❌ Error loading dashboard data:', error);
         
-        // Show user-friendly error
-        document.getElementById('tracksTableBody').innerHTML = `
-            <tr>
-                <td colspan="5" class="py-8 text-center">
-                    <div class="text-red-500 font-semibold mb-2">⚠️ Failed to load data</div>
-                    <div class="text-xs text-slate-500">
-                        Error: ${error.message}<br>
-                        Make sure API server is running: <code>python api/search_api.py</code>
-                    </div>
-                </td>
-            </tr>
-        `;
+        // Show user-friendly error  
+        const tableBody = safeGetElement('tracksTableBody');
+        if (tableBody) {
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="py-8 text-center">
+                        <div class="text-red-500 font-semibold mb-2">⚠️ Failed to load data</div>
+                        <div class="text-xs text-slate-500">
+                            Error: ${error.message}<br>
+                            Make sure API server is running: <code>python api/search_api.py</code>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }
     }
 }
 
@@ -158,10 +172,10 @@ async function loadTopTracksFromAPI() {
 // ============================================
 
 function updateSummaryCards(stats) {
-    document.getElementById('totalTracks').textContent = formatNumber(stats.total_tracks);
-    document.getElementById('avgTempo').textContent = stats.avg_tempo;
-    document.getElementById('sweetSpotPct').textContent = `${stats.sweet_spot_percentage}%`;
-    document.getElementById('headerSubtitle').textContent = `${formatNumber(stats.total_tracks)} Tracks Analysis (1920-2020)`;
+    safeSetText('totalTracks', formatNumber(stats.total_tracks));
+    safeSetText('avgTempo', stats.avg_tempo);
+    safeSetText('sweetSpotPct', `${stats.sweet_spot_percentage}%`);
+    safeSetText('headerSubtitle', `${formatNumber(stats.total_tracks)} Tracks Analysis (1920-2020)`);
 }
 
 // ============================================
@@ -359,6 +373,27 @@ function renderTopTracksTable(tracks) {
 // ============================================
 // UTILITY FUNCTIONS
 // ============================================
+
+// Safe DOM element getter with null check
+function safeGetElement(id) {
+    const el = document.getElementById(id);
+    if (!el) {
+        console.warn(`⚠️ Element not found: ${id}`);
+    }
+    return el;
+}
+
+// Safe set text content
+function safeSetText(id, text) {
+    const el = safeGetElement(id);
+    if (el) el.textContent = text;
+}
+
+// Safe set innerHTML
+function safeSetHTML(id, html) {
+    const el = safeGetElement(id);
+    if (el) el.innerHTML = html;
+}
 
 function formatNumber(num) {
     if (num >= 1000000) {
