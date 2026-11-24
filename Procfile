@@ -1,1 +1,1 @@
-web: gunicorn api.search_api:app --bind 0.0.0.0:$PORT --timeout 120
+web: gunicorn api.firebase_api:app --bind 0.0.0.0:$PORT --timeout 120
