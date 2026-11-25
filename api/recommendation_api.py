@@ -485,9 +485,10 @@ def get_recommendations():
                 sql += f" AND {feature} BETWEEN {max(0, min_val - tolerance)} AND {min(1, max_val + tolerance)}"
         
         # Optional: Filter by artist (fuzzy search)
+        query_params = []
         if artist_filter:
             sql += " AND LOWER(artists) LIKE LOWER(%s)"
-            params['artist_pattern'] = f"%{artist_filter}%"
+            query_params.append(f"%{artist_filter}%")
         
         # Sort by: match_score DESC, sweet_spot bonus, year DESC
         sql += """ 
@@ -497,12 +498,10 @@ def get_recommendations():
                 year DESC
             LIMIT %s
         """
+        query_params.append(limit)
         
         # Execute query with params
-        if artist_filter:
-            cur.execute(sql, (limit, params['artist_pattern']))
-        else:
-            cur.execute(sql, (limit,))
+        cur.execute(sql, tuple(query_params))
         results = cur.fetchall()
         
         cur.close()
