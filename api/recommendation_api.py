@@ -404,14 +404,14 @@ def get_recommendations():
         
         # Build dynamic scoring based on filters
         filter_weights = {
-            'energy': 0.25,
-            'tempo': 0.25,
-            'valence': 0.15,
-            'danceability': 0.15,
-            'acousticness': 0.1,
-            'instrumentalness': 0.05,
-            'speechiness': 0.03,
-            'loudness': 0.02
+            'energy': 0.20,        # Reduced from 0.25
+            'tempo': 0.20,         # Reduced from 0.25
+            'valence': 0.12,       # Reduced from 0.15
+            'danceability': 0.12,  # Reduced from 0.15
+            'acousticness': 0.08,  # Reduced from 0.1
+            'instrumentalness': 0.04,  # Reduced from 0.05
+            'speechiness': 0.02,   # Reduced from 0.03
+            'loudness': 0.02       # Same
         }
         
         for feature, (min_val, max_val) in filters.items():
@@ -444,9 +444,28 @@ def get_recommendations():
                         END
                     """)
         
+        # Add recency score (20% weight) - favor newer tracks
+        recency_weight = 0.10
+        weight_total += recency_weight
+        score_parts.append(f"""
+            ((year - 1920.0) / (2020.0 - 1920.0)) * {recency_weight}
+        """)
+        
+        # Add danceability bonus (10% weight) - proxy for popularity
+        dance_bonus_weight = 0.10
+        weight_total += dance_bonus_weight
+        score_parts.append(f"""
+            (danceability * {dance_bonus_weight})
+        """)
+        
         sql += " + ".join(score_parts)
         sql += f"""
-                ) / {weight_total} as match_score
+                ) / {weight_total} as match_score,
+                -- Sweet spot bonus indicator
+                CASE 
+                    WHEN tempo BETWEEN 100 AND 120 THEN true
+                    ELSE false
+                END as in_sweet_spot
             FROM spotify_tracks_raw
             WHERE 1=1
         """
@@ -462,7 +481,14 @@ def get_recommendations():
                 tolerance = 0.1
                 sql += f" AND {feature} BETWEEN {max(0, min_val - tolerance)} AND {min(1, max_val + tolerance)}"
         
-        sql += " ORDER BY match_score DESC, year DESC LIMIT %s"
+        # Sort by: match_score DESC, sweet_spot bonus, year DESC
+        sql += """ 
+            ORDER BY 
+                match_score DESC,
+                in_sweet_spot DESC,
+                year DESC
+            LIMIT %s
+        """
         params['limit'] = limit
         
         cur.execute(sql, (limit,))
@@ -544,11 +570,18 @@ def generate_match_description(track, filters):
     if 'instrumentalness' in filters and track['instrumentalness'] > 0.5:
         descriptions.append('Instrumental')
     
+    # Recency bonus - show if track is recent
+    year = track.get('year')
+    if year and year >= 2015:
+        descriptions.append('🔥 Hits')
+    elif year and year >= 2010:
+        descriptions.append('Modern')
+    
     # Sweet spot bonus
-    if 100 <= track['tempo'] <= 120:
+    if track.get('in_sweet_spot') or (100 <= track['tempo'] <= 120):
         descriptions.append('⭐ Sweet spot')
     
-    return ' & '.join(descriptions[:3]) if descriptions else 'Cocok'
+    return ' & '.join(descriptions[:4]) if descriptions else 'Cocok'
 
 
 # ============================================
