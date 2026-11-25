@@ -3,418 +3,275 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rekomendasi Lagu Pintar - Spotify Analysis</title>
+    <title>Smart Recommendations - Spotify Analysis</title>
+    
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,300..900;1,300..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Config (Same as dashboard) -->
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#006e2d",
+                        "on-primary": "#ffffff",
+                        "primary-container": "#1db954",
+                        "on-primary-container": "#004118",
+                        "secondary": "#006c49",
+                        "on-secondary": "#ffffff",
+                        "secondary-container": "#6cf8bb",
+                        "background": "#faf8ff",
+                        "surface": "#faf8ff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#f2f3ff",
+                        "surface-container": "#eaedff",
+                        "surface-container-high": "#e2e7ff",
+                        "on-surface": "#131b2e",
+                        "on-surface-variant": "#3d4a3d",
+                        "outline": "#6d7b6c"
+                    },
+                    fontFamily: {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Hanken Grotesk"],
+                        "mono": ["JetBrains Mono"]
+                    }
+                }
+            }
+        };
+    </script>
+    
     <style>
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .header {
-            text-align: center;
-            color: white;
-            margin-bottom: 40px;
-        }
-        
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
-        
-        .header p {
-            font-size: 1.2em;
-            opacity: 0.9;
-        }
-        
-        .card {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            margin-bottom: 30px;
+            letter-spacing: 0.01em;
+            word-spacing: 0.05em;
+            line-height: 1.6;
         }
         
         .step-indicator {
             display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 40px;
+            gap: 0.5rem;
+            align-items: center;
         }
         
         .step {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: #e0e0e0;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 9999px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            color: #999;
+            font-size: 0.875rem;
             transition: all 0.3s;
+        }
+        
+        .step.pending {
+            background: #e2e7ff;
+            color: #6d7b6c;
         }
         
         .step.active {
-            background: #667eea;
+            background: #006e2d;
             color: white;
-            transform: scale(1.2);
+            box-shadow: 0 4px 12px rgba(0, 110, 45, 0.3);
         }
         
         .step.completed {
-            background: #4caf50;
+            background: #1db954;
             color: white;
         }
         
-        .question {
-            text-align: center;
-            margin-bottom: 40px;
+        .step-line {
+            width: 2rem;
+            height: 2px;
+            background: #e2e7ff;
         }
         
-        .question h2 {
-            font-size: 2em;
-            color: #333;
-            margin-bottom: 15px;
-        }
-        
-        .question p {
-            font-size: 1.1em;
-            color: #666;
-        }
-        
-        .options {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .option-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 15px;
-            padding: 30px 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: 3px solid transparent;
-        }
-        
-        .option-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
-        }
-        
-        .option-card.selected {
-            border-color: #4caf50;
-            box-shadow: 0 10px 30px rgba(76, 175, 80, 0.4);
-        }
-        
-        .option-card .emoji {
-            font-size: 3em;
-            margin-bottom: 10px;
-        }
-        
-        .option-card .label {
-            font-size: 1.1em;
-            font-weight: bold;
-            color: white;
-            margin-bottom: 5px;
-        }
-        
-        .option-card .desc {
-            font-size: 0.9em;
-            color: rgba(255, 255, 255, 0.8);
-        }
-        
-        .navigation {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 30px;
-        }
-        
-        .btn {
-            padding: 15px 40px;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.1em;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
-        }
-        
-        .btn-secondary {
-            background: #e0e0e0;
-            color: #666;
-        }
-        
-        .btn-secondary:hover {
-            background: #d0d0d0;
-        }
-        
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .results {
-            display: none;
-        }
-        
-        .results.active {
-            display: block;
-        }
-        
-        .results-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .results-header h2 {
-            color: #333;
-            margin-bottom: 15px;
-        }
-        
-        .results-summary {
-            background: #f5f5f5;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-        }
-        
-        .results-summary p {
-            color: #666;
-            margin-bottom: 10px;
-        }
-        
-        .track-list {
-            display: grid;
-            gap: 15px;
-        }
-        
-        .track-card {
-            background: #f9f9f9;
-            padding: 20px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            transition: all 0.3s;
-        }
-        
-        .track-card:hover {
-            background: #f0f0f0;
-            transform: translateX(5px);
-        }
-        
-        .track-number {
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #667eea;
-            min-width: 40px;
-        }
-        
-        .track-info {
-            flex: 1;
-        }
-        
-        .track-name {
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 5px;
-        }
-        
-        .track-artist {
-            color: #666;
-            font-size: 0.9em;
-        }
-        
-        .track-features {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        
-        .feature-badge {
-            background: #667eea;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 0.8em;
-        }
-        
-        .track-match {
-            text-align: right;
-        }
-        
-        .match-score {
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #4caf50;
-        }
-        
-        .match-desc {
-            font-size: 0.9em;
-            color: #666;
-        }
-        
-        .loading {
-            text-align: center;
-            padding: 60px 20px;
-        }
-        
-        .loading .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .hidden {
-            display: none;
+        .step-line.active {
+            background: #1db954;
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>🎵 Rekomendasi Lagu Pintar</h1>
-            <p>Temukan lagu yang sempurna untuk moodmu!</p>
+
+<body class="bg-surface font-body text-on-surface min-h-screen p-6">
+    <div class="max-w-6xl mx-auto">
+        
+        <!-- Header -->
+        <div class="mb-6">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-primary text-2xl">recommend</span>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-headline font-bold text-on-surface">Smart Recommendations</h1>
+                    <p class="text-sm text-on-surface-variant">Temukan lagu yang sempurna untuk moodmu • 1.2M tracks</p>
+                </div>
+            </div>
         </div>
         
-        <div class="card">
+        <!-- Main Card -->
+        <div class="bg-surface-container-lowest rounded-xl shadow-lg overflow-hidden">
+            
             <!-- Step Indicator -->
-            <div class="step-indicator">
-                <div class="step active" id="step1">1</div>
-                <div class="step" id="step2">2</div>
-                <div class="step" id="step3">3</div>
-            </div>
-            
-            <!-- Step 1: Select Mood -->
-            <div id="stepMood" class="step-content">
-                <div class="question">
-                    <h2>Lagi pengen dengerin lagu buat apa nih?</h2>
-                    <p>Pilih mood atau aktivitasmu</p>
-                </div>
-                
-                <div class="options" id="moodOptions">
-                    <!-- Will be populated by JavaScript -->
-                </div>
-                
-                <div class="navigation">
-                    <div></div>
-                    <button class="btn btn-primary" id="btnNextMood" disabled>Lanjut →</button>
+            <div class="bg-surface-container-low px-6 py-4">
+                <div class="step-indicator">
+                    <div class="step active" id="step1">1</div>
+                    <div class="step-line" id="line1"></div>
+                    <div class="step pending" id="step2">2</div>
+                    <div class="step-line" id="line2"></div>
+                    <div class="step pending" id="step3">3</div>
                 </div>
             </div>
             
-            <!-- Step 2: Select Activity -->
-            <div id="stepActivity" class="step-content hidden">
-                <div class="question">
-                    <h2 id="activityQuestion">Loading...</h2>
-                </div>
+            <div class="p-6">
                 
-                <div class="options" id="activityOptions">
-                    <!-- Will be populated by JavaScript -->
-                </div>
-                
-                <div class="navigation">
-                    <button class="btn btn-secondary" id="btnBackToMood">← Kembali</button>
-                    <button class="btn btn-primary" id="btnNextActivity" disabled>Lanjut →</button>
-                </div>
-            </div>
-            
-            <!-- Step 3: Intensity / Refinement -->
-            <div id="stepIntensity" class="step-content hidden">
-                <div class="question">
-                    <h2>Seberapa intens musiknya?</h2>
-                    <p>Pilih level energi yang kamu mau</p>
-                </div>
-                
-                <div class="options">
-                    <div class="option-card" data-intensity="calm" onclick="selectIntensity('calm', this)">
-                        <div class="emoji">😌</div>
-                        <div class="label">Pelan Banget</div>
-                        <div class="desc">Santai & tenang</div>
+                <!-- Step 1: Mood Selection -->
+                <div id="stepMood" class="step-content">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-headline font-semibold text-on-surface mb-2">Lagi pengen dengerin lagu buat apa nih?</h2>
+                        <p class="text-on-surface-variant">Pilih mood atau aktivitasmu</p>
                     </div>
-                    <div class="option-card" data-intensity="moderate" onclick="selectIntensity('moderate', this)">
-                        <div class="emoji">🙂</div>
-                        <div class="label">Sedang</div>
-                        <div class="desc">Enak didenger</div>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6" id="moodOptions">
+                        <!-- Populated by JS -->
                     </div>
-                    <div class="option-card" data-intensity="energetic" onclick="selectIntensity('energetic', this)">
-                        <div class="emoji">😄</div>
-                        <div class="label">Semangat</div>
-                        <div class="desc">Bikin excited</div>
-                    </div>
-                    <div class="option-card" data-intensity="maximum" onclick="selectIntensity('maximum', this)">
-                        <div class="emoji">🤩</div>
-                        <div class="label">Maksimal</div>
-                        <div class="desc">Full power!</div>
+                    
+                    <div class="flex justify-end">
+                        <button class="bg-primary hover:bg-primary/90 text-on-primary px-6 py-3 rounded-lg font-semibold transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2" id="btnNextMood" disabled>
+                            Lanjut
+                            <span class="material-symbols-outlined text-lg">arrow_forward</span>
+                        </button>
                     </div>
                 </div>
                 
-                <div class="navigation">
-                    <button class="btn btn-secondary" id="btnBackToActivity">← Kembali</button>
-                    <button class="btn btn-primary" id="btnGetRecommendations" disabled>Cari Lagu! 🎵</button>
-                </div>
-            </div>
-            
-            <!-- Results -->
-            <div id="stepResults" class="results">
-                <div class="results-header">
-                    <h2>🎉 Playlist Sempurna Untukmu!</h2>
+                <!-- Step 2: Activity Selection -->
+                <div id="stepActivity" class="step-content hidden">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-headline font-semibold text-on-surface mb-2" id="activityQuestion">Loading...</h2>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6" id="activityOptions">
+                        <!-- Populated by JS -->
+                    </div>
+                    
+                    <div class="flex justify-between">
+                        <button class="bg-surface-container hover:bg-surface-container-high text-on-surface px-6 py-3 rounded-lg font-semibold transition-all" id="btnBackToMood">
+                            <span class="material-symbols-outlined text-lg">arrow_back</span>
+                            Kembali
+                        </button>
+                        <button class="bg-primary hover:bg-primary/90 text-on-primary px-6 py-3 rounded-lg font-semibold transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2" id="btnNextActivity" disabled>
+                            Lanjut
+                            <span class="material-symbols-outlined text-lg">arrow_forward</span>
+                        </button>
+                    </div>
                 </div>
                 
-                <div class="results-summary" id="resultsSummary">
-                    <!-- Will be populated by JavaScript -->
+                <!-- Step 3: Intensity Selection -->
+                <div id="stepIntensity" class="step-content hidden">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-headline font-semibold text-on-surface mb-2">Seberapa intens musiknya?</h2>
+                        <p class="text-on-surface-variant">Pilih level energi yang kamu mau</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                        <div class="option-card cursor-pointer p-6 rounded-xl border-2 border-surface-container-high hover:border-primary hover:bg-primary/5 transition-all text-center" data-intensity="calm" onclick="selectIntensity('calm', this)">
+                            <div class="text-5xl mb-3">😌</div>
+                            <div class="font-semibold text-on-surface mb-1">Pelan Banget</div>
+                            <div class="text-sm text-on-surface-variant">Santai & tenang</div>
+                        </div>
+                        <div class="option-card cursor-pointer p-6 rounded-xl border-2 border-primary bg-primary/5 transition-all text-center" data-intensity="moderate" onclick="selectIntensity('moderate', this)">
+                            <div class="text-5xl mb-3">🙂</div>
+                            <div class="font-semibold text-on-surface mb-1">Sedang</div>
+                            <div class="text-sm text-on-surface-variant">Enak didenger</div>
+                        </div>
+                        <div class="option-card cursor-pointer p-6 rounded-xl border-2 border-surface-container-high hover:border-primary hover:bg-primary/5 transition-all text-center" data-intensity="energetic" onclick="selectIntensity('energetic', this)">
+                            <div class="text-5xl mb-3">😄</div>
+                            <div class="font-semibold text-on-surface mb-1">Semangat</div>
+                            <div class="text-sm text-on-surface-variant">Bikin excited</div>
+                        </div>
+                        <div class="option-card cursor-pointer p-6 rounded-xl border-2 border-surface-container-high hover:border-primary hover:bg-primary/5 transition-all text-center" data-intensity="maximum" onclick="selectIntensity('maximum', this)">
+                            <div class="text-5xl mb-3">🤩</div>
+                            <div class="font-semibold text-on-surface mb-1">Maksimal</div>
+                            <div class="text-sm text-on-surface-variant">Full power!</div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between">
+                        <button class="bg-surface-container hover:bg-surface-container-high text-on-surface px-6 py-3 rounded-lg font-semibold transition-all" id="btnBackToActivity">
+                            <span class="material-symbols-outlined text-lg">arrow_back</span>
+                            Kembali
+                        </button>
+                        <button class="bg-primary hover:bg-primary/90 text-on-primary px-6 py-3 rounded-lg font-semibold transition-all shadow-md flex items-center gap-2" id="btnGetRecommendations">
+                            <span class="material-symbols-outlined text-lg">search</span>
+                            Cari Lagu!
+                        </button>
+                    </div>
                 </div>
                 
-                <div class="track-list" id="trackList">
-                    <!-- Will be populated by JavaScript -->
+                <!-- Loading State -->
+                <div id="loadingState" class="hidden text-center py-12">
+                    <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-primary/20 border-t-primary mb-4"></div>
+                    <p class="text-on-surface-variant">Mencari lagu yang sempurna untukmu...</p>
                 </div>
                 
-                <div class="navigation" style="margin-top: 30px;">
-                    <button class="btn btn-secondary" id="btnRestart">🔄 Cari Lagi</button>
-                    <div></div>
+                <!-- Results -->
+                <div id="stepResults" class="step-content hidden">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-headline font-semibold text-on-surface mb-3">🎉 Playlist Sempurna Untukmu!</h2>
+                        
+                        <div class="bg-primary/10 rounded-lg p-4 mb-4" id="resultsSummary">
+                            <!-- Summary will be populated -->
+                        </div>
+                        
+                        <div class="flex items-center justify-between mb-4">
+                            <p class="text-on-surface-variant"><span class="font-semibold text-on-surface" id="resultsCount">0</span> lagu ditemukan</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Results Table -->
+                    <div class="overflow-x-auto -mx-6 px-6">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="bg-surface-container-low text-on-surface-variant text-sm uppercase tracking-wider">
+                                    <th class="py-3 px-4 text-left rounded-l-lg">#</th>
+                                    <th class="py-3 px-4 text-left">Track & Artist</th>
+                                    <th class="py-3 px-4 text-center">Tempo</th>
+                                    <th class="py-3 px-4 text-center">Match</th>
+                                    <th class="py-3 px-4 text-left rounded-r-lg">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-surface-container-high" id="trackList">
+                                <!-- Results will be populated -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="mt-6 flex justify-center">
+                        <button class="bg-surface-container hover:bg-surface-container-high text-on-surface px-6 py-3 rounded-lg font-semibold transition-all flex items-center gap-2" id="btnRestart">
+                            <span class="material-symbols-outlined text-lg">refresh</span>
+                            Cari Lagi
+                        </button>
+                    </div>
                 </div>
-            </div>
-            
-            <!-- Loading -->
-            <div id="loadingState" class="loading hidden">
-                <div class="spinner"></div>
-                <p>Mencari lagu yang sempurna untukmu...</p>
+                
             </div>
         </div>
+        
     </div>
     
     <script>
@@ -423,7 +280,7 @@
         // State
         let selectedMood = null;
         let selectedActivity = null;
-        let selectedIntensity = 'moderate'; // Default
+        let selectedIntensity = 'moderate';
         let moods = [];
         
         // Load moods on page load
@@ -448,10 +305,10 @@
             
             moods.forEach(mood => {
                 const card = document.createElement('div');
-                card.className = 'option-card';
+                card.className = 'option-card cursor-pointer p-6 rounded-xl border-2 border-surface-container-high hover:border-primary hover:bg-primary/5 transition-all text-center';
                 card.innerHTML = `
-                    <div class="emoji">${mood.emoji}</div>
-                    <div class="label">${mood.label}</div>
+                    <div class="text-5xl mb-3">${mood.emoji}</div>
+                    <div class="font-semibold text-on-surface">${mood.label}</div>
                 `;
                 
                 card.onclick = () => selectMood(mood.id, card);
@@ -460,22 +317,20 @@
         }
         
         function selectMood(moodId, element) {
-            // Remove previous selection
             document.querySelectorAll('#moodOptions .option-card').forEach(el => {
-                el.classList.remove('selected');
+                el.className = 'option-card cursor-pointer p-6 rounded-xl border-2 border-surface-container-high hover:border-primary hover:bg-primary/5 transition-all text-center';
             });
             
-            // Select new
-            element.classList.add('selected');
+            element.className = 'option-card cursor-pointer p-6 rounded-xl border-2 border-primary bg-primary/5 transition-all text-center';
             selectedMood = moodId;
             document.getElementById('btnNextMood').disabled = false;
         }
         
         function goToActivityStep() {
             // Update steps
-            document.getElementById('step1').classList.remove('active');
-            document.getElementById('step1').classList.add('completed');
-            document.getElementById('step2').classList.add('active');
+            document.getElementById('step1').className = 'step completed';
+            document.getElementById('line1').classList.add('active');
+            document.getElementById('step2').className = 'step active';
             
             // Show activity step
             document.getElementById('stepMood').classList.add('hidden');
@@ -485,27 +340,6 @@
             const mood = moods.find(m => m.id === selectedMood);
             document.getElementById('activityQuestion').textContent = getActivityQuestion(selectedMood);
             renderActivityOptions(mood.activities);
-        }
-        
-        function goToIntensityStep() {
-            // Update steps
-            document.getElementById('step2').classList.remove('active');
-            document.getElementById('step2').classList.add('completed');
-            document.getElementById('step3').classList.add('active');
-            
-            // Show intensity step
-            document.getElementById('stepActivity').classList.add('hidden');
-            document.getElementById('stepIntensity').classList.remove('hidden');
-            
-            // Reset intensity selection
-            document.querySelectorAll('#stepIntensity .option-card').forEach(el => {
-                el.classList.remove('selected');
-                if (el.dataset.intensity === 'moderate') {
-                    el.classList.add('selected');
-                }
-            });
-            selectedIntensity = 'moderate';
-            document.getElementById('btnGetRecommendations').disabled = false;
         }
         
         function getActivityQuestion(moodId) {
@@ -528,10 +362,10 @@
             
             activities.forEach(activity => {
                 const card = document.createElement('div');
-                card.className = 'option-card';
+                card.className = 'option-card cursor-pointer p-5 rounded-xl border-2 border-surface-container-high hover:border-primary hover:bg-primary/5 transition-all';
                 card.innerHTML = `
-                    <div class="label">${formatActivityLabel(activity.id)}</div>
-                    <div class="desc">${activity.description}</div>
+                    <div class="font-semibold text-on-surface mb-1">${formatActivityLabel(activity.id)}</div>
+                    <div class="text-sm text-on-surface-variant">${activity.description}</div>
                 `;
                 
                 card.onclick = () => selectActivity(activity.id, card);
@@ -541,66 +375,47 @@
         
         function formatActivityLabel(activityId) {
             const labels = {
-                'joget': '💃 Joget/Goyang',
-                'nyanyi': '🎤 Nyanyi',
-                'santai': '😌 Santai Aja',
-                'pagi_cerah': '🌞 Pagi Cerah',
-                'lari_cardio': '🏃 Lari/Cardio',
-                'gym_beban': '🏋️ Gym/Beban',
-                'yoga': '🧘 Yoga/Stretch',
-                'sepeda': '🚴 Sepeda',
-                'fokus_maksimal': '🎧 Fokus Maksimal',
-                'musik_latar': '🎵 Musik Latar',
-                'santai_kerja': '☕ Santai Kerja',
-                'nangis_curhat': '😭 Nangis Curhat',
-                'melow_merenung': '🎹 Melow Merenung',
-                'hujan': '🌧️ Hujan-hujan',
-                'tidur': '😴 Tidur',
-                'meditasi': '🧘 Meditasi',
-                'baca_buku': '📖 Baca Buku',
-                'ngopi': '☕ Ngopi Santai',
-                'dance_party': '🕺 Dance Party',
-                'hype_party': '🎊 Hype Party',
-                'santai_nongkrong': '🍹 Santai Nongkrong',
-                'preparty': '🎶 Pre-Party',
-                'jalan_tol': '🛣️ Jalan Tol',
-                'macet': '🏙️ Macet di Kota',
-                'malam': '🌃 Malam Hari',
-                'roadtrip': '🏞️ Road Trip',
-                'intimate': '🕯️ Intimate',
-                'kencan': '💑 Kencan',
-                'slow_dance': '💃 Slow Dance',
-                'love_songs': '💕 Love Songs'
+                'joget': '💃 Joget/Goyang', 'nyanyi': '🎤 Nyanyi', 'santai': '😌 Santai Aja', 'pagi_cerah': '🌞 Pagi Cerah',
+                'lari_cardio': '🏃 Lari/Cardio', 'gym_beban': '🏋️ Gym/Beban', 'yoga': '🧘 Yoga/Stretch', 'sepeda': '🚴 Sepeda',
+                'fokus_maksimal': '🎧 Fokus Maksimal', 'musik_latar': '🎵 Musik Latar', 'santai_kerja': '☕ Santai Kerja',
+                'nangis_curhat': '😭 Nangis Curhat', 'melow_merenung': '🎹 Melow Merenung', 'hujan': '🌧️ Hujan-hujan',
+                'tidur': '😴 Tidur', 'meditasi': '🧘 Meditasi', 'baca_buku': '📖 Baca Buku', 'ngopi': '☕ Ngopi Santai',
+                'dance_party': '🕺 Dance Party', 'hype_party': '🎊 Hype Party', 'santai_nongkrong': '🍹 Santai Nongkrong', 'preparty': '🎶 Pre-Party',
+                'jalan_tol': '🛣️ Jalan Tol', 'macet': '🏙️ Macet di Kota', 'malam': '🌃 Malam Hari', 'roadtrip': '🏞️ Road Trip',
+                'intimate': '🕯️ Intimate', 'kencan': '💑 Kencan', 'slow_dance': '💃 Slow Dance', 'love_songs': '💕 Love Songs'
             };
             return labels[activityId] || activityId;
         }
         
         function selectActivity(activityId, element) {
-            // Remove previous selection
             document.querySelectorAll('#activityOptions .option-card').forEach(el => {
-                el.classList.remove('selected');
+                el.className = 'option-card cursor-pointer p-5 rounded-xl border-2 border-surface-container-high hover:border-primary hover:bg-primary/5 transition-all';
             });
             
-            // Select new
-            element.classList.add('selected');
+            element.className = 'option-card cursor-pointer p-5 rounded-xl border-2 border-primary bg-primary/5 transition-all';
             selectedActivity = activityId;
             document.getElementById('btnNextActivity').disabled = false;
         }
         
+        function goToIntensityStep() {
+            document.getElementById('step2').className = 'step completed';
+            document.getElementById('line2').classList.add('active');
+            document.getElementById('step3').className = 'step active';
+            
+            document.getElementById('stepActivity').classList.add('hidden');
+            document.getElementById('stepIntensity').classList.remove('hidden');
+        }
+        
         function selectIntensity(intensity, element) {
-            // Remove previous selection
             document.querySelectorAll('#stepIntensity .option-card').forEach(el => {
-                el.classList.remove('selected');
+                el.className = 'option-card cursor-pointer p-6 rounded-xl border-2 border-surface-container-high hover:border-primary hover:bg-primary/5 transition-all text-center';
             });
             
-            // Select new
-            element.classList.add('selected');
+            element.className = 'option-card cursor-pointer p-6 rounded-xl border-2 border-primary bg-primary/5 transition-all text-center';
             selectedIntensity = intensity;
-            document.getElementById('btnGetRecommendations').disabled = false;
         }
         
         async function getRecommendations() {
-            // Show loading
             document.getElementById('stepIntensity').classList.add('hidden');
             document.getElementById('loadingState').classList.remove('hidden');
             
@@ -622,27 +437,22 @@
                     displayResults(data);
                 } else {
                     alert('Error: ' + data.error);
-                    goBackToIntensity();
+                    document.getElementById('loadingState').classList.add('hidden');
+                    document.getElementById('stepIntensity').classList.remove('hidden');
                 }
             } catch (error) {
-                console.error('Error getting recommendations:', error);
-                alert('Gagal mendapatkan rekomendasi. Pastikan API server berjalan!');
-                goBackToIntensity();
+                console.error('Error:', error);
+                alert('Gagal mendapatkan rekomendasi!');
+                document.getElementById('loadingState').classList.add('hidden');
+                document.getElementById('stepIntensity').classList.remove('hidden');
             }
         }
         
         function displayResults(data) {
-            // Hide loading
             document.getElementById('loadingState').classList.add('hidden');
+            document.getElementById('step3').className = 'step completed';
+            document.getElementById('stepResults').classList.remove('hidden');
             
-            // Update steps
-            document.getElementById('step3').classList.remove('active');
-            document.getElementById('step3').classList.add('completed');
-            
-            // Show results
-            document.getElementById('stepResults').classList.add('active');
-            
-            // Render summary
             const mood = moods.find(m => m.id === data.mood);
             const intensityLabels = {
                 'calm': '😌 Pelan Banget',
@@ -651,103 +461,88 @@
                 'maximum': '🤩 Maksimal'
             };
             
-            const summaryHTML = `
-                <p><strong>✨ Berdasarkan pilihan kamu:</strong></p>
-                <p>• ${mood.emoji} ${mood.label}</p>
-                <p>• ${data.description}</p>
-                <p>• Intensitas: ${intensityLabels[selectedIntensity]}</p>
-                <p><strong>📊 Ditemukan ${data.count} lagu</strong></p>
+            document.getElementById('resultsSummary').innerHTML = `
+                <p class="text-on-surface mb-2"><strong>✨ Berdasarkan pilihan kamu:</strong></p>
+                <p class="text-on-surface">• ${mood.emoji} ${mood.label}</p>
+                <p class="text-on-surface">• ${data.description}</p>
+                <p class="text-on-surface">• Intensitas: ${intensityLabels[selectedIntensity]}</p>
             `;
-            document.getElementById('resultsSummary').innerHTML = summaryHTML;
             
-            // Render tracks
-            const trackList = document.getElementById('trackList');
-            trackList.innerHTML = '';
+            document.getElementById('resultsCount').textContent = data.count;
+            
+            const tbody = document.getElementById('trackList');
+            tbody.innerHTML = '';
             
             data.results.forEach((track, index) => {
-                const card = document.createElement('div');
-                card.className = 'track-card';
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-surface-container-low transition-colors';
                 
-                // Format artists
                 let artists = track.artists;
-                if (Array.isArray(artists)) {
-                    artists = artists.join(', ');
-                }
+                if (Array.isArray(artists)) artists = artists.join(', ');
                 
-                card.innerHTML = `
-                    <div class="track-number">${index + 1}</div>
-                    <div class="track-info">
-                        <div class="track-name">${track.name}</div>
-                        <div class="track-artist">${artists} • ${track.year || 'Unknown'}</div>
-                        <div class="track-features">
-                            <span class="feature-badge">${Math.round(track.tempo)} BPM</span>
-                            ${track.match_description ? `<span class="feature-badge">${track.match_description}</span>` : ''}
-                        </div>
-                    </div>
-                    <div class="track-match">
-                        <div class="match-score">${Math.round(track.match_score * 100)}%</div>
-                        <div class="match-desc">Match</div>
-                    </div>
+                row.innerHTML = `
+                    <td class="py-4 px-4 font-mono text-on-surface-variant">${index + 1}</td>
+                    <td class="py-4 px-4">
+                        <div class="font-semibold text-on-surface">${track.name}</div>
+                        <div class="text-sm text-on-surface-variant">${artists} • ${track.year || 'Unknown'}</div>
+                    </td>
+                    <td class="py-4 px-4 text-center">
+                        <span class="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-mono font-semibold">
+                            ${Math.round(track.tempo)} BPM
+                        </span>
+                    </td>
+                    <td class="py-4 px-4 text-center">
+                        <span class="inline-block px-3 py-1 rounded-full bg-secondary-container text-on-secondary text-sm font-semibold">
+                            ${Math.round(track.match_score * 100)}%
+                        </span>
+                    </td>
+                    <td class="py-4 px-4">
+                        <span class="text-sm text-on-surface-variant">${track.match_description || 'Cocok'}</span>
+                    </td>
                 `;
                 
-                trackList.appendChild(card);
+                tbody.appendChild(row);
             });
         }
         
         function goBackToMood() {
-            // Update steps
-            document.getElementById('step2').classList.remove('active');
-            document.getElementById('step1').classList.remove('completed');
-            document.getElementById('step1').classList.add('active');
+            document.getElementById('step2').className = 'step pending';
+            document.getElementById('line1').classList.remove('active');
+            document.getElementById('step1').className = 'step active';
             
-            // Show mood step
             document.getElementById('stepActivity').classList.add('hidden');
             document.getElementById('stepMood').classList.remove('hidden');
             
-            // Reset activity selection
             selectedActivity = null;
             document.getElementById('btnNextActivity').disabled = true;
         }
         
         function goBackToActivity() {
-            // Update steps
-            document.getElementById('step3').classList.remove('active');
-            document.getElementById('step2').classList.remove('completed');
-            document.getElementById('step2').classList.add('active');
+            document.getElementById('step3').className = 'step pending';
+            document.getElementById('line2').classList.remove('active');
+            document.getElementById('step2').className = 'step active';
             
-            // Show activity step
             document.getElementById('stepIntensity').classList.add('hidden');
             document.getElementById('stepActivity').classList.remove('hidden');
         }
         
-        function goBackToIntensity() {
-            // Show intensity step
-            document.getElementById('loadingState').classList.add('hidden');
-            document.getElementById('stepIntensity').classList.remove('hidden');
-        }
-        
         function restart() {
-            // Reset state
             selectedMood = null;
             selectedActivity = null;
             selectedIntensity = 'moderate';
             
-            // Reset steps
-            document.getElementById('step1').classList.add('active');
-            document.getElementById('step1').classList.remove('completed');
-            document.getElementById('step2').classList.remove('active');
-            document.getElementById('step2').classList.remove('completed');
-            document.getElementById('step3').classList.remove('active');
-            document.getElementById('step3').classList.remove('completed');
+            document.getElementById('step1').className = 'step active';
+            document.getElementById('step2').className = 'step pending';
+            document.getElementById('step3').className = 'step pending';
+            document.getElementById('line1').classList.remove('active');
+            document.getElementById('line2').classList.remove('active');
             
-            // Show mood step
-            document.getElementById('stepResults').classList.remove('active');
+            document.getElementById('stepResults').classList.add('hidden');
             document.getElementById('stepMood').classList.remove('hidden');
             document.getElementById('btnNextMood').disabled = true;
             
-            // Clear selections
             document.querySelectorAll('.option-card').forEach(el => {
-                el.classList.remove('selected');
+                el.className = el.className.replace('border-primary bg-primary/5', 'border-surface-container-high');
             });
         }
         
