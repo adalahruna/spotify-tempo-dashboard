@@ -628,6 +628,7 @@ document.addEventListener('DOMContentLoaded', function() {
         'overview': ['overviewSection', 'summaryCardsSection', 'mainContentSection'],
         'search-and-query': ['overviewSection', 'summaryCardsSection', 'mainContentSection'],
         'ml-predictions': ['mlPredictionsSection'],
+        'recommendations': ['recommendationsSection'],
         'tempo-zones': ['tempoZonesSection'],
         'top-tracks': ['topTracksSection'],
         'methodology': ['methodologySection']
@@ -643,6 +644,7 @@ document.addEventListener('DOMContentLoaded', function() {
             'summaryCardsSection', 
             'mainContentSection',
             'mlPredictionsSection',
+            'recommendationsSection',
             'topTracksSection',
             'tempoZonesSection',
             'methodologySection'

@@ -223,6 +223,13 @@
                         <span class="inline-flex items-center justify-center w-4 h-4 text-[9px] font-bold rounded-full bg-secondary text-on-secondary">AI</span>
                     </span>
                 </a>
+                <a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors font-body-md text-body-md" data-path="recommendations" href="#">
+                    <span class="material-symbols-outlined text-[18px]">recommend</span>
+                    <span class="flex items-center gap-1.5">
+                        Smart Recommendations
+                        <span class="inline-flex items-center justify-center px-1.5 h-4 text-[9px] font-bold rounded-full bg-primary-container text-on-primary">NEW</span>
+                    </span>
+                </a>
                 <a class="flex items-center gap-space-sm px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors font-body-md text-body-md" data-path="tempo-zones" href="#">
                     <span class="material-symbols-outlined text-[18px]">speed</span>Tempo Zones
                 </a>
@@ -286,6 +293,12 @@
                     <span class="flex items-center gap-1.5">
                         ML Predictions
                         <span class="inline-flex items-center justify-center w-4 h-4 text-[10px] font-bold rounded-full bg-secondary text-on-secondary">AI</span>
+                    </span>
+                </a>
+                <a class="px-space-md py-1.5 rounded-full font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="recommendations" href="#">
+                    <span class="flex items-center gap-1.5">
+                        Recommendations
+                        <span class="inline-flex items-center justify-center px-1.5 h-4 text-[9px] font-bold rounded-full bg-primary-container text-on-primary">NEW</span>
                     </span>
                 </a>
                 <a class="px-space-md py-1.5 rounded-full font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" data-path="tempo-zones" href="#">Tempo Zones</a>
@@ -472,6 +485,61 @@
         <div class="bg-surface-container-low/50 rounded-lg p-3 flex flex-col">
             <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Tempo Optimizer</span>
             <span class="font-headline-sm text-headline-sm text-primary font-bold mt-1">19.4% R²</span>
+        </div>
+    </div>
+</section>
+
+<!-- SMART RECOMMENDATIONS SECTION (Emotion-Based Music Discovery) -->
+<section id="recommendationsSection" class="hidden bg-gradient-to-br from-primary-container/10 via-surface-container-lowest to-secondary-container/5 rounded-xl p-space-lg shadow-[0_2px_12px_rgba(0,110,45,0.08)] border border-primary/10" style="display: none;">
+    <div class="flex items-center justify-between mb-space-md">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                <span class="material-symbols-outlined text-[24px] text-primary">recommend</span>
+            </div>
+            <div>
+                <div class="flex items-center gap-2">
+                    <h2 class="font-headline-md text-headline-md text-on-surface tracking-tight">Smart Recommendations</h2>
+                    <span class="inline-flex items-center justify-center px-2 py-0.5 text-[10px] font-bold rounded-full bg-primary-container text-on-primary uppercase tracking-wider">NEW</span>
+                </div>
+                <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Rekomendasi lagu berdasarkan mood & aktivitas • 1.2M tracks • Bahasa Indonesia</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-2">
+            <span class="px-3 py-1 rounded-full bg-primary/10 text-primary font-label-sm text-label-sm font-semibold flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                8 Moods Ready
+            </span>
+        </div>
+    </div>
+    
+    <!-- Embedded Recommendations Interface -->
+    <div class="bg-surface-container-lowest rounded-lg overflow-hidden shadow-inner">
+        <iframe 
+            src="recommend.html" 
+            class="w-full border-0" 
+            style="height: 900px; display: block;"
+            title="Smart Recommendations Interface"
+            loading="lazy"
+        ></iframe>
+    </div>
+    
+    <!-- Features Summary -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-sm mt-space-md">
+        <div class="bg-surface-container-low/50 rounded-lg p-3 flex flex-col">
+            <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Mood Categories</span>
+            <span class="font-headline-sm text-headline-sm text-primary font-bold mt-1">8 Moods</span>
+        </div>
+        <div class="bg-surface-container-low/50 rounded-lg p-3 flex flex-col">
+            <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Activities</span>
+            <span class="font-headline-sm text-headline-sm text-primary font-bold mt-1">32 Types</span>
+        </div>
+        <div class="bg-surface-container-low/50 rounded-lg p-3 flex flex-col">
+            <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Response Time</span>
+            <span class="font-headline-sm text-headline-sm text-primary font-bold mt-1">&lt;200ms</span>
+        </div>
+        <div class="bg-surface-container-low/50 rounded-lg p-3 flex flex-col">
+            <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Match Algorithm</span>
+            <span class="font-headline-sm text-headline-sm text-primary font-bold mt-1">Weighted</span>
         </div>
     </div>
 </section>
