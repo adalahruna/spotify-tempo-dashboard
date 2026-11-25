@@ -321,6 +321,7 @@ def get_recommendations():
         "mood": "olahraga",
         "activity": "lari_cardio",
         "intensity": "maximum",  # calm, moderate, energetic, maximum
+        "artist": "The Weeknd",  # optional: filter by specific artist
         "limit": 20
     }
     
@@ -331,6 +332,7 @@ def get_recommendations():
         mood = data.get('mood')
         activity = data.get('activity')
         intensity = data.get('intensity', 'moderate')
+        artist_filter = data.get('artist', '').strip()  # Optional artist filter
         limit = min(int(data.get('limit', 20)), 100)
         
         if not mood or not activity:
@@ -482,6 +484,11 @@ def get_recommendations():
                 tolerance = 0.15
                 sql += f" AND {feature} BETWEEN {max(0, min_val - tolerance)} AND {min(1, max_val + tolerance)}"
         
+        # Optional: Filter by artist (fuzzy search)
+        if artist_filter:
+            sql += " AND LOWER(artists) LIKE LOWER(%s)"
+            params['artist_pattern'] = f"%{artist_filter}%"
+        
         # Sort by: match_score DESC, sweet_spot bonus, year DESC
         sql += """ 
             ORDER BY 
@@ -490,9 +497,12 @@ def get_recommendations():
                 year DESC
             LIMIT %s
         """
-        params['limit'] = limit
         
-        cur.execute(sql, (limit,))
+        # Execute query with params
+        if artist_filter:
+            cur.execute(sql, (limit, params['artist_pattern']))
+        else:
+            cur.execute(sql, (limit,))
         results = cur.fetchall()
         
         cur.close()
@@ -507,6 +517,7 @@ def get_recommendations():
             'mood': mood,
             'activity': activity,
             'intensity': intensity,
+            'artist_filter': artist_filter if artist_filter else None,
             'description': description,
             'filters_applied': filters,
             'count': len(results),
@@ -626,3 +637,60 @@ def get_moods():
         'success': True,
         'moods': moods_list
     })
+
+
+@recommend_bp.route('/artists/search', methods=['GET'])
+def search_artists():
+    """
+    Search for artists (autocomplete)
+    
+    Query params:
+    - q: search query (min 2 chars)
+    - limit: max results (default 10)
+    
+    Returns: List of unique artists matching the query
+    """
+    try:
+        query = request.args.get('q', '').strip()
+        limit = min(int(request.args.get('limit', 10)), 50)
+        
+        if len(query) < 2:
+            return jsonify({
+                'success': False,
+                'error': 'Query minimal 2 karakter'
+            }), 400
+        
+        conn = get_db_connection()
+        cur = conn.cursor()
+        
+        # Search artists using ILIKE (case-insensitive)
+        # Use DISTINCT to get unique artists
+        sql = """
+            SELECT DISTINCT artists, COUNT(*) as track_count
+            FROM spotify_tracks_raw
+            WHERE LOWER(artists) LIKE LOWER(%s)
+            GROUP BY artists
+            ORDER BY track_count DESC, artists ASC
+            LIMIT %s
+        """
+        
+        cur.execute(sql, (f"%{query}%", limit))
+        results = cur.fetchall()
+        
+        cur.close()
+        conn.close()
+        
+        artists = [{'name': row['artists'], 'track_count': row['track_count']} for row in results]
+        
+        return jsonify({
+            'success': True,
+            'query': query,
+            'count': len(artists),
+            'artists': artists
+        })
+        
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500

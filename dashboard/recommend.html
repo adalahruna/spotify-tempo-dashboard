@@ -224,6 +224,54 @@
                             <span class="material-symbols-outlined text-lg">arrow_back</span>
                             Kembali
                         </button>
+                        <button class="bg-primary hover:bg-primary/90 text-on-primary px-6 py-3 rounded-lg font-semibold transition-all shadow-md flex items-center gap-2" id="btnNextToArtist">
+                            Lanjut
+                            <span class="material-symbols-outlined text-lg">arrow_forward</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Step 4: Artist Filter (Optional) -->
+                <div id="stepArtist" class="step-content hidden">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-headline font-semibold text-on-surface mb-2">Mau dari artist tertentu? (Optional)</h2>
+                        <p class="text-on-surface-variant">Kosongkan kalau mau semua artist</p>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <div class="relative">
+                            <input 
+                                type="text" 
+                                id="artistInput" 
+                                placeholder="Ketik nama artist (min 2 huruf)..."
+                                class="w-full px-4 py-3 rounded-lg border-2 border-surface-container-high focus:border-primary focus:outline-none text-on-surface"
+                                autocomplete="off"
+                            />
+                            <span class="material-symbols-outlined absolute right-3 top-3 text-on-surface-variant">search</span>
+                        </div>
+                        
+                        <!-- Autocomplete results -->
+                        <div id="artistResults" class="mt-2 hidden bg-surface-container-lowest rounded-lg shadow-lg border-2 border-surface-container-high max-h-64 overflow-y-auto">
+                            <!-- Populated by JS -->
+                        </div>
+                        
+                        <!-- Selected artist display -->
+                        <div id="selectedArtistDisplay" class="mt-3 hidden">
+                            <div class="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-lg">
+                                <span class="material-symbols-outlined">person</span>
+                                <span id="selectedArtistName"></span>
+                                <button onclick="clearArtistSelection()" class="ml-2 hover:text-primary-container">
+                                    <span class="material-symbols-outlined text-sm">close</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between">
+                        <button class="bg-surface-container hover:bg-surface-container-high text-on-surface px-6 py-3 rounded-lg font-semibold transition-all" id="btnBackToIntensity">
+                            <span class="material-symbols-outlined text-lg">arrow_back</span>
+                            Kembali
+                        </button>
                         <button class="bg-primary hover:bg-primary/90 text-on-primary px-6 py-3 rounded-lg font-semibold transition-all shadow-md flex items-center gap-2" id="btnGetRecommendations">
                             <span class="material-symbols-outlined text-lg">search</span>
                             Cari Lagu!
@@ -292,7 +340,9 @@
         let selectedMood = null;
         let selectedActivity = null;
         let selectedIntensity = 'moderate';
+        let selectedArtist = '';  // Artist filter (optional)
         let moods = [];
+        let searchTimeout = null;
         
         // Load moods on page load
         async function loadMoods() {
@@ -473,20 +523,104 @@
             selectedIntensity = intensity;
         }
         
-        async function getRecommendations() {
+        function goToArtistStep() {
             document.getElementById('stepIntensity').classList.add('hidden');
+            document.getElementById('stepArtist').classList.remove('hidden');
+        }
+        
+        function goBackToIntensity() {
+            document.getElementById('stepArtist').classList.add('hidden');
+            document.getElementById('stepIntensity').classList.remove('hidden');
+        }
+        
+        // Artist search with debounce
+        document.getElementById('artistInput').addEventListener('input', function(e) {
+            const query = e.target.value.trim();
+            
+            clearTimeout(searchTimeout);
+            
+            if (query.length < 2) {
+                document.getElementById('artistResults').classList.add('hidden');
+                return;
+            }
+            
+            searchTimeout = setTimeout(() => searchArtists(query), 300);
+        });
+        
+        async function searchArtists(query) {
+            try {
+                const response = await fetch(`${API_URL}/artists/search?q=${encodeURIComponent(query)}&limit=10`);
+                const data = await response.json();
+                
+                if (data.success && data.artists.length > 0) {
+                    displayArtistResults(data.artists);
+                } else {
+                    document.getElementById('artistResults').innerHTML = '<div class="p-3 text-on-surface-variant text-sm">Tidak ada artist ditemukan</div>';
+                    document.getElementById('artistResults').classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Error searching artists:', error);
+            }
+        }
+        
+        function displayArtistResults(artists) {
+            const container = document.getElementById('artistResults');
+            container.innerHTML = '';
+            
+            artists.forEach(artist => {
+                const item = document.createElement('div');
+                item.className = 'p-3 hover:bg-primary/10 cursor-pointer transition-colors border-b border-surface-container-high last:border-b-0';
+                item.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="font-semibold text-on-surface">${artist.name}</div>
+                            <div class="text-xs text-on-surface-variant">${artist.track_count} lagu</div>
+                        </div>
+                        <span class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+                    </div>
+                `;
+                item.onclick = () => selectArtist(artist.name);
+                container.appendChild(item);
+            });
+            
+            container.classList.remove('hidden');
+        }
+        
+        function selectArtist(artistName) {
+            selectedArtist = artistName;
+            document.getElementById('artistInput').value = '';
+            document.getElementById('artistResults').classList.add('hidden');
+            document.getElementById('selectedArtistName').textContent = artistName;
+            document.getElementById('selectedArtistDisplay').classList.remove('hidden');
+        }
+        
+        function clearArtistSelection() {
+            selectedArtist = '';
+            document.getElementById('selectedArtistDisplay').classList.add('hidden');
+            document.getElementById('artistInput').value = '';
+        }
+        
+        async function getRecommendations() {
+            document.getElementById('stepArtist').classList.add('hidden');
             document.getElementById('loadingState').classList.remove('hidden');
             
             try {
+                const payload = {
+                    mood: selectedMood,
+                    activity: selectedActivity,
+                    intensity: selectedIntensity,
+                    limit: 20
+                };
+                
+                // Add artist filter if selected
+                if (selectedArtist) {
+                    payload.artist = selectedArtist;
+                }
+                
                 const response = await fetch(`${API_URL}/recommend`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        mood: selectedMood,
-                        activity: selectedActivity,
-                        intensity: selectedIntensity,
-                        limit: 20
-                    })
+                    body: JSON.stringify(payload)
                 });
                 
                 const data = await response.json();
@@ -496,13 +630,13 @@
                 } else {
                     alert('Error: ' + data.error);
                     document.getElementById('loadingState').classList.add('hidden');
-                    document.getElementById('stepIntensity').classList.remove('hidden');
+                    document.getElementById('stepArtist').classList.remove('hidden');
                 }
             } catch (error) {
                 console.error('Error:', error);
                 alert('Gagal mendapatkan rekomendasi!');
                 document.getElementById('loadingState').classList.add('hidden');
-                document.getElementById('stepIntensity').classList.remove('hidden');
+                document.getElementById('stepArtist').classList.remove('hidden');
             }
         }
         
@@ -538,6 +672,12 @@
                     <span class="material-symbols-outlined ${intensity.color}" style="font-variation-settings: 'FILL' 1;">${intensity.icon}</span>
                     Intensitas: ${intensity.label}
                 </p>
+                ${data.artist_filter ? `
+                <p class="text-on-surface flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">person</span>
+                    Artist: <strong>${data.artist_filter}</strong>
+                </p>
+                ` : ''}
             `;
             
             document.getElementById('resultsCount').textContent = data.count;
@@ -602,6 +742,7 @@
             selectedMood = null;
             selectedActivity = null;
             selectedIntensity = 'moderate';
+            selectedArtist = '';
             
             document.getElementById('step1').className = 'step active';
             document.getElementById('step2').className = 'step pending';
@@ -613,6 +754,8 @@
             document.getElementById('stepMood').classList.remove('hidden');
             document.getElementById('btnNextMood').disabled = true;
             
+            clearArtistSelection();
+            
             document.querySelectorAll('.option-card').forEach(el => {
                 el.className = el.className.replace('border-primary bg-primary/5', 'border-surface-container-high');
             });
@@ -623,6 +766,8 @@
         document.getElementById('btnBackToMood').onclick = goBackToMood;
         document.getElementById('btnNextActivity').onclick = goToIntensityStep;
         document.getElementById('btnBackToActivity').onclick = goBackToActivity;
+        document.getElementById('btnNextToArtist').onclick = goToArtistStep;
+        document.getElementById('btnBackToIntensity').onclick = goBackToIntensity;
         document.getElementById('btnGetRecommendations').onclick = getRecommendations;
         document.getElementById('btnRestart').onclick = restart;
         
