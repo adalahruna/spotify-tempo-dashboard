@@ -35,9 +35,13 @@ cd "d:\Semester 5\BIG DATA\Project\dashboard"
 python -m http.server 8000
 ```
 
-### **Step 3: Open Recommendation Page**
+### **Step 3: Open Dashboard**
 
-Browser: **http://localhost:8000/recommend.html**
+**Main Dashboard:**  
+**http://localhost:8000**
+
+Lalu klik tab **"Smart Recommendations"** (ada badge "NEW") atau  
+**http://localhost:8000/recommend.html** (standalone version)
 
 ---
 
