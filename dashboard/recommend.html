@@ -190,22 +190,30 @@
                     
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                         <div class="option-card cursor-pointer p-6 rounded-xl border-2 border-surface-container-high hover:border-primary hover:bg-primary/5 transition-all text-center" data-intensity="calm" onclick="selectIntensity('calm', this)">
-                            <div class="text-5xl mb-3">😌</div>
+                            <div class="mb-3">
+                                <span class="material-symbols-outlined text-blue-400" style="font-size: 3rem; font-variation-settings: 'FILL' 1, 'wght' 300, 'GRAD' 0, 'opsz' 48;">self_improvement</span>
+                            </div>
                             <div class="font-semibold text-on-surface mb-1">Pelan Banget</div>
                             <div class="text-sm text-on-surface-variant">Santai & tenang</div>
                         </div>
                         <div class="option-card cursor-pointer p-6 rounded-xl border-2 border-primary bg-primary/5 transition-all text-center" data-intensity="moderate" onclick="selectIntensity('moderate', this)">
-                            <div class="text-5xl mb-3">🙂</div>
+                            <div class="mb-3">
+                                <span class="material-symbols-outlined text-green-500" style="font-size: 3rem; font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 48;">music_note</span>
+                            </div>
                             <div class="font-semibold text-on-surface mb-1">Sedang</div>
                             <div class="text-sm text-on-surface-variant">Enak didenger</div>
                         </div>
                         <div class="option-card cursor-pointer p-6 rounded-xl border-2 border-surface-container-high hover:border-primary hover:bg-primary/5 transition-all text-center" data-intensity="energetic" onclick="selectIntensity('energetic', this)">
-                            <div class="text-5xl mb-3">😄</div>
+                            <div class="mb-3">
+                                <span class="material-symbols-outlined text-orange-500" style="font-size: 3rem; font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 48;">sports_score</span>
+                            </div>
                             <div class="font-semibold text-on-surface mb-1">Semangat</div>
                             <div class="text-sm text-on-surface-variant">Bikin excited</div>
                         </div>
                         <div class="option-card cursor-pointer p-6 rounded-xl border-2 border-surface-container-high hover:border-primary hover:bg-primary/5 transition-all text-center" data-intensity="maximum" onclick="selectIntensity('maximum', this)">
-                            <div class="text-5xl mb-3">🤩</div>
+                            <div class="mb-3">
+                                <span class="material-symbols-outlined text-red-500" style="font-size: 3rem; font-variation-settings: 'FILL' 1, 'wght' 600, 'GRAD' 0, 'opsz' 48;">bolt</span>
+                            </div>
                             <div class="font-semibold text-on-surface mb-1">Maksimal</div>
                             <div class="text-sm text-on-surface-variant">Full power!</div>
                         </div>
@@ -232,7 +240,10 @@
                 <!-- Results -->
                 <div id="stepResults" class="step-content hidden">
                     <div class="mb-6">
-                        <h2 class="text-2xl font-headline font-semibold text-on-surface mb-3">🎉 Playlist Sempurna Untukmu!</h2>
+                        <h2 class="text-2xl font-headline font-semibold text-on-surface mb-3 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary" style="font-size: 2rem; font-variation-settings: 'FILL' 1;">playlist_play</span>
+                            Playlist Sempurna Untukmu!
+                        </h2>
                         
                         <div class="bg-primary/10 rounded-lg p-4 mb-4" id="resultsSummary">
                             <!-- Summary will be populated -->
@@ -303,11 +314,26 @@
             const container = document.getElementById('moodOptions');
             container.innerHTML = '';
             
+            // Icon mapping for moods
+            const moodIcons = {
+                'senang': { icon: 'sentiment_very_satisfied', color: 'text-yellow-500' },
+                'olahraga': { icon: 'fitness_center', color: 'text-orange-500' },
+                'belajar': { icon: 'menu_book', color: 'text-blue-500' },
+                'galau': { icon: 'sentiment_dissatisfied', color: 'text-purple-500' },
+                'santai': { icon: 'nightlight', color: 'text-indigo-500' },
+                'pesta': { icon: 'celebration', color: 'text-pink-500' },
+                'nyetir': { icon: 'directions_car', color: 'text-cyan-500' },
+                'romantis': { icon: 'favorite', color: 'text-red-500' }
+            };
+            
             moods.forEach(mood => {
+                const iconData = moodIcons[mood.id] || { icon: 'music_note', color: 'text-primary' };
                 const card = document.createElement('div');
                 card.className = 'option-card cursor-pointer p-6 rounded-xl border-2 border-surface-container-high hover:border-primary hover:bg-primary/5 transition-all text-center';
                 card.innerHTML = `
-                    <div class="text-5xl mb-3">${mood.emoji}</div>
+                    <div class="mb-3">
+                        <span class="material-symbols-outlined ${iconData.color}" style="font-size: 3rem; font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 48;">${iconData.icon}</span>
+                    </div>
                     <div class="font-semibold text-on-surface">${mood.label}</div>
                 `;
                 
@@ -375,16 +401,48 @@
         
         function formatActivityLabel(activityId) {
             const labels = {
-                'joget': '💃 Joget/Goyang', 'nyanyi': '🎤 Nyanyi', 'santai': '😌 Santai Aja', 'pagi_cerah': '🌞 Pagi Cerah',
-                'lari_cardio': '🏃 Lari/Cardio', 'gym_beban': '🏋️ Gym/Beban', 'yoga': '🧘 Yoga/Stretch', 'sepeda': '🚴 Sepeda',
-                'fokus_maksimal': '🎧 Fokus Maksimal', 'musik_latar': '🎵 Musik Latar', 'santai_kerja': '☕ Santai Kerja',
-                'nangis_curhat': '😭 Nangis Curhat', 'melow_merenung': '🎹 Melow Merenung', 'hujan': '🌧️ Hujan-hujan',
-                'tidur': '😴 Tidur', 'meditasi': '🧘 Meditasi', 'baca_buku': '📖 Baca Buku', 'ngopi': '☕ Ngopi Santai',
-                'dance_party': '🕺 Dance Party', 'hype_party': '🎊 Hype Party', 'santai_nongkrong': '🍹 Santai Nongkrong', 'preparty': '🎶 Pre-Party',
-                'jalan_tol': '🛣️ Jalan Tol', 'macet': '🏙️ Macet di Kota', 'malam': '🌃 Malam Hari', 'roadtrip': '🏞️ Road Trip',
-                'intimate': '🕯️ Intimate', 'kencan': '💑 Kencan', 'slow_dance': '💃 Slow Dance', 'love_songs': '💕 Love Songs'
+                // Senang
+                'joget': { icon: 'sports_gymnastics', label: 'Joget/Goyang' },
+                'nyanyi': { icon: 'mic', label: 'Nyanyi' },
+                'santai': { icon: 'self_improvement', label: 'Santai Aja' },
+                'pagi_cerah': { icon: 'wb_sunny', label: 'Pagi Cerah' },
+                // Olahraga
+                'lari_cardio': { icon: 'directions_run', label: 'Lari/Cardio' },
+                'gym_beban': { icon: 'fitness_center', label: 'Gym/Beban' },
+                'yoga': { icon: 'self_improvement', label: 'Yoga/Stretch' },
+                'sepeda': { icon: 'directions_bike', label: 'Sepeda' },
+                // Belajar
+                'fokus_maksimal': { icon: 'headphones', label: 'Fokus Maksimal' },
+                'musik_latar': { icon: 'music_note', label: 'Musik Latar' },
+                'santai_kerja': { icon: 'coffee', label: 'Santai Kerja' },
+                // Galau
+                'nangis_curhat': { icon: 'sentiment_very_dissatisfied', label: 'Nangis Curhat' },
+                'melow_merenung': { icon: 'piano', label: 'Melow Merenung' },
+                'hujan': { icon: 'rainy', label: 'Hujan-hujan' },
+                // Santai
+                'tidur': { icon: 'bedtime', label: 'Tidur' },
+                'meditasi': { icon: 'spa', label: 'Meditasi' },
+                'baca_buku': { icon: 'menu_book', label: 'Baca Buku' },
+                'ngopi': { icon: 'local_cafe', label: 'Ngopi Santai' },
+                // Pesta
+                'dance_party': { icon: 'nightlife', label: 'Dance Party' },
+                'hype_party': { icon: 'celebration', label: 'Hype Party' },
+                'santai_nongkrong': { icon: 'groups', label: 'Santai Nongkrong' },
+                'preparty': { icon: 'queue_music', label: 'Pre-Party' },
+                // Nyetir
+                'jalan_tol': { icon: 'directions_car', label: 'Jalan Tol' },
+                'macet': { icon: 'traffic', label: 'Macet di Kota' },
+                'malam': { icon: 'nights_stay', label: 'Malam Hari' },
+                'roadtrip': { icon: 'explore', label: 'Road Trip' },
+                // Romantis
+                'intimate': { icon: 'favorite', label: 'Intimate' },
+                'kencan': { icon: 'dining', label: 'Kencan' },
+                'slow_dance': { icon: 'sports_gymnastics', label: 'Slow Dance' },
+                'love_songs': { icon: 'favorite_border', label: 'Love Songs' }
             };
-            return labels[activityId] || activityId;
+            
+            const data = labels[activityId] || { icon: 'music_note', label: activityId };
+            return `<span class="material-symbols-outlined text-primary mr-2" style="font-size: 1.5rem; vertical-align: middle; font-variation-settings: 'FILL' 1;">${data.icon}</span>${data.label}`;
         }
         
         function selectActivity(activityId, element) {
@@ -455,17 +513,31 @@
             
             const mood = moods.find(m => m.id === data.mood);
             const intensityLabels = {
-                'calm': '😌 Pelan Banget',
-                'moderate': '🙂 Sedang',
-                'energetic': '😄 Semangat',
-                'maximum': '🤩 Maksimal'
+                'calm': { icon: 'self_improvement', label: 'Pelan Banget', color: 'text-blue-400' },
+                'moderate': { icon: 'music_note', label: 'Sedang', color: 'text-green-500' },
+                'energetic': { icon: 'sports_score', label: 'Semangat', color: 'text-orange-500' },
+                'maximum': { icon: 'bolt', label: 'Maksimal', color: 'text-red-500' }
             };
             
+            const intensity = intensityLabels[selectedIntensity];
+            
             document.getElementById('resultsSummary').innerHTML = `
-                <p class="text-on-surface mb-2"><strong>✨ Berdasarkan pilihan kamu:</strong></p>
-                <p class="text-on-surface">• ${mood.emoji} ${mood.label}</p>
-                <p class="text-on-surface">• ${data.description}</p>
-                <p class="text-on-surface">• Intensitas: ${intensityLabels[selectedIntensity]}</p>
+                <p class="text-on-surface mb-2 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                    <strong>Berdasarkan pilihan kamu:</strong>
+                </p>
+                <p class="text-on-surface flex items-center gap-2">
+                    <span class="material-symbols-outlined">arrow_right</span>
+                    ${mood.label}
+                </p>
+                <p class="text-on-surface flex items-center gap-2">
+                    <span class="material-symbols-outlined">arrow_right</span>
+                    ${data.description}
+                </p>
+                <p class="text-on-surface flex items-center gap-2">
+                    <span class="material-symbols-outlined ${intensity.color}" style="font-variation-settings: 'FILL' 1;">${intensity.icon}</span>
+                    Intensitas: ${intensity.label}
+                </p>
             `;
             
             document.getElementById('resultsCount').textContent = data.count;
