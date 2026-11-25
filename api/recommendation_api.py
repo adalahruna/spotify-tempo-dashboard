@@ -402,16 +402,16 @@ def get_recommendations():
         score_parts = []
         weight_total = 0
         
-        # Build dynamic scoring based on filters
+        # Build dynamic scoring based on filters (ML-tuned weights)
         filter_weights = {
-            'energy': 0.20,        # Reduced from 0.25
-            'tempo': 0.20,         # Reduced from 0.25
-            'valence': 0.12,       # Reduced from 0.15
-            'danceability': 0.12,  # Reduced from 0.15
-            'acousticness': 0.08,  # Reduced from 0.1
-            'instrumentalness': 0.04,  # Reduced from 0.05
-            'speechiness': 0.02,   # Reduced from 0.03
-            'loudness': 0.02       # Same
+            'energy': 0.22,        # Critical untuk mood matching
+            'tempo': 0.22,         # Critical untuk activity matching
+            'valence': 0.14,       # Important untuk emotional tone
+            'danceability': 0.14,  # Important untuk groove/movement
+            'acousticness': 0.10,  # Moderate untuk sound character
+            'instrumentalness': 0.06,  # Lower untuk vocal preference
+            'speechiness': 0.04,   # Lower untuk podcast filtering
+            'loudness': 0.03       # Minimal untuk dynamics
         }
         
         for feature, (min_val, max_val) in filters.items():
@@ -420,42 +420,40 @@ def get_recommendations():
                 weight_total += weight
                 
                 if feature == 'tempo':
-                    # Tempo scoring (closer to middle of range = better)
+                    # Gaussian-like scoring: peak at middle, smooth falloff
                     mid_tempo = (min_val + max_val) / 2
+                    tempo_range = (max_val - min_val) / 2
                     score_parts.append(f"""
-                        (1.0 - LEAST(1.0, ABS(tempo - {mid_tempo}) / {(max_val - min_val) / 2})) * {weight}
+                        (EXP(-0.5 * POWER((tempo - {mid_tempo}) / {tempo_range}, 2))) * {weight}
                     """)
                 elif feature == 'loudness':
-                    # Loudness scoring (normalized to 0-1)
+                    # Loudness scoring with soft boundaries
+                    mid_loud = (min_val + max_val) / 2
+                    loud_range = (max_val - min_val) / 2
                     score_parts.append(f"""
-                        CASE 
-                            WHEN loudness BETWEEN {min_val} AND {max_val} 
-                            THEN {weight}
-                            ELSE {weight * 0.3}
-                        END
+                        GREATEST(0.0, 1.0 - ABS(loudness - {mid_loud}) / {loud_range * 2}) * {weight}
                     """)
                 else:
-                    # Standard feature scoring (0-1 range)
+                    # Gaussian scoring for 0-1 features
+                    mid_val = (min_val + max_val) / 2
+                    feature_range = (max_val - min_val) / 2
                     score_parts.append(f"""
-                        CASE 
-                            WHEN {feature} BETWEEN {min_val} AND {max_val}
-                            THEN {weight}
-                            ELSE {weight * 0.3}
-                        END
+                        (EXP(-0.5 * POWER(({feature} - {mid_val}) / {feature_range}, 2))) * {weight}
                     """)
         
-        # Add recency score (20% weight) - favor newer tracks
-        recency_weight = 0.10
+        # Add recency score (15% weight) - favor tracks from 2010-2020
+        # Peak at 2015, falloff on both sides
+        recency_weight = 0.15
         weight_total += recency_weight
         score_parts.append(f"""
-            ((year - 1920.0) / (2020.0 - 1920.0)) * {recency_weight}
+            (EXP(-0.3 * POWER((year - 2015.0) / 10.0, 2))) * {recency_weight}
         """)
         
-        # Add danceability bonus (10% weight) - proxy for popularity
-        dance_bonus_weight = 0.10
-        weight_total += dance_bonus_weight
+        # Add "hit potential" score (10% weight) - combo of danceability & energy
+        hit_weight = 0.10
+        weight_total += hit_weight
         score_parts.append(f"""
-            (danceability * {dance_bonus_weight})
+            (POWER(danceability * energy, 0.5)) * {hit_weight}
         """)
         
         sql += " + ".join(score_parts)
@@ -470,15 +468,18 @@ def get_recommendations():
             WHERE 1=1
         """
         
-        # Add WHERE filters
+        # Add WHERE filters - wider search space, let scoring do the ranking
         for feature, (min_val, max_val) in filters.items():
             if feature == 'tempo':
-                sql += f" AND tempo BETWEEN {min_val} AND {max_val}"
+                # Allow ±20% tempo variance
+                tempo_tolerance = (max_val - min_val) * 0.2
+                sql += f" AND tempo BETWEEN {max(40, min_val - tempo_tolerance)} AND {min(200, max_val + tempo_tolerance)}"
             elif feature == 'loudness':
-                sql += f" AND loudness BETWEEN {min_val} AND {max_val}"
+                # Allow ±5 dB variance
+                sql += f" AND loudness BETWEEN {min_val - 5} AND {max_val + 5}"
             else:
-                # For 0-1 features, allow some tolerance
-                tolerance = 0.1
+                # For 0-1 features, allow wider tolerance for better diversity
+                tolerance = 0.15
                 sql += f" AND {feature} BETWEEN {max(0, min_val - tolerance)} AND {min(1, max_val + tolerance)}"
         
         # Sort by: match_score DESC, sweet_spot bonus, year DESC
