@@ -43,92 +43,110 @@ Browser: **http://localhost:8000/recommend.html**
 
 ## 🧪 **Test Scenarios:**
 
-### **Scenario 1: Workout (Lari/Cardio)**
+### **Scenario 1: Workout (Lari/Cardio - Maksimal)**
 
-1. Pilih mood: **💪 Olahraga**
-2. Pilih activity: **🏃 Lari/Cardio** - "Lagu cepat & energik buat lari"
-3. Click: **Cari Lagu! 🎵**
+1. **Step 1:** Pilih mood: **💪 Olahraga**
+2. **Step 2:** Pilih activity: **🏃 Lari/Cardio** - "Lagu cepat & energik buat lari"
+3. **Step 3:** Pilih intensity: **🤩 Maksimal** - "Full power!"
+4. Click: **Cari Lagu! 🎵**
 
 **Expected Results:**
 - ~200+ tracks found
-- Tempo: 140-180 BPM (cepat)
-- Energy: 0.8-1.0 (sangat energik)
+- Tempo: 168-216 BPM (super cepat!) 
+- Energy: >0.9 (sangat energik)
 - Tracks like: "Blinding Lights", "Don't Start Now"
 
 ---
 
-### **Scenario 2: Study (Fokus Maksimal)**
+### **Scenario 2: Study (Fokus Maksimal - Pelan)**
 
-1. Pilih mood: **📚 Belajar/Kerja**
-2. Pilih activity: **🎧 Fokus Maksimal** - "Tanpa lirik, full konsentrasi"
-3. Click: **Cari Lagu! 🎵**
+1. **Step 1:** Pilih mood: **📚 Belajar/Kerja**
+2. **Step 2:** Pilih activity: **🎧 Fokus Maksimal** - "Tanpa lirik, full konsentrasi"
+3. **Step 3:** Pilih intensity: **😌 Pelan Banget** - "Santai & tenang"
+4. Click: **Cari Lagu! 🎵**
 
 **Expected Results:**
 - Instrumental tracks only
-- Energy: 0.0-0.3 (tenang)
-- Instrumentalness: >0.7
-- No vocals!
+- Energy: <0.2 (super tenang)
+- Tempo: 60-85 BPM (pelan)
+- Perfect for deep focus!
 
 ---
 
-### **Scenario 3: Party (Dance)**
+### **Scenario 3: Party (Dance - Semangat)**
 
-1. Pilih mood: **🎉 Pesta/Nongkrong**
-2. Pilih activity: **🕺 Dance Party** - "Lagu buat nge-dance"
-3. Click: **Cari Lagu! 🎵**
+1. **Step 1:** Pilih mood: **🎉 Pesta/Nongkrong**
+2. **Step 2:** Pilih activity: **🕺 Dance Party** - "Lagu buat nge-dance"
+3. **Step 3:** Pilih intensity: **😄 Semangat** - "Bikin excited"
+4. Click: **Cari Lagu! 🎵**
 
 **Expected Results:**
 - Danceability: 0.7-1.0 (groovy)
-- Energy: 0.7-1.0 (energik)
-- Tempo: 110-130 BPM (sweet spot!)
+- Energy: 0.8-1.0 (tinggi)
+- Tempo: 121-143 BPM (upbeat, still near sweet spot!)
 - Perfect dance tracks
 
 ---
 
-### **Scenario 4: Galau (Melow)**
+### **Scenario 4: Galau (Melow - Sedang)**
 
-1. Pilih mood: **😢 Galau/Sedih**
-2. Pilih activity: **🎹 Melow Merenung** - "Lagu pelan & menenangkan"
-3. Click: **Cari Lagu! 🎵**
+1. **Step 1:** Pilih mood: **😢 Galau/Sedih**
+2. **Step 2:** Pilih activity: **🎹 Melow Merenung** - "Lagu pelan & menenangkan"
+3. **Step 3:** Pilih intensity: **🙂 Sedang** - "Enak didenger"
+4. Click: **Cari Lagu! 🎵**
 
 **Expected Results:**
 - Valence: 0.2-0.4 (sad)
 - Acousticness: >0.5 (acoustic)
 - Tempo: 60-90 BPM (slow)
-- Sad, emotional tracks
+- Energy: moderate
+- Sad, emotional but not too heavy
 
 ---
 
-### **Scenario 5: Romantic (Intimate)**
+### **Scenario 5: Romantic (Intimate - Pelan)**
 
-1. Pilih mood: **❤️ Romantis**
-2. Pilih activity: **🕯️ Intimate** - "Lembut & personal"
-3. Click: **Cari Lagu! 🎵**
+1. **Step 1:** Pilih mood: **❤️ Romantis**
+2. **Step 2:** Pilih activity: **🕯️ Intimate** - "Lembut & personal"
+3. **Step 3:** Pilih intensity: **😌 Pelan Banget** - "Santai & tenang"
+4. Click: **Cari Lagu! 🎵**
 
 **Expected Results:**
-- Energy: 0.2-0.5 (low)
+- Energy: 0.14-0.35 (very low)
 - Acousticness: 0.5-1.0 (acoustic)
 - Valence: 0.5-0.8 (romantic)
-- Soft love songs
+- Tempo: slower than base
+- Perfect intimate moments
 
 ---
 
 ## 🎨 **UI Features:**
 
 ### **Step Indicator:**
-- ● Step 1 (active) → ○ Step 2
+- ● Step 1 → ○ Step 2 → ○ Step 3
 - Changes to ✓ when completed
+- **3 steps total** for better refinement!
 
-### **Mood Cards:**
+### **Step 1: Mood Selection**
+- 8 mood cards with emoji
 - Gradient purple background
-- Emoji + Label
 - Hover effect (lift up)
 - Selected state (green border)
 
-### **Activity Cards:**
+### **Step 2: Activity Selection**
+- Mood-specific activities (3-4 per mood)
 - Label + Description
 - Natural language descriptions
 - No technical terms!
+
+### **Step 3: Intensity Selection** ⭐ **NEW!**
+- 4 intensity levels:
+  - 😌 **Pelan Banget** - Santai & tenang
+  - 🙂 **Sedang** - Enak didenger (default)
+  - 😄 **Semangat** - Bikin excited
+  - 🤩 **Maksimal** - Full power!
+- Adjusts energy & tempo multipliers
+- Fine-tunes recommendations
 
 ### **Results Display:**
 - Track ranking (1-20)
@@ -136,6 +154,7 @@ Browser: **http://localhost:8000/recommend.html**
 - Natural descriptions ("Cepat & Energik")
 - Year, artist info
 - BPM badge
+- Intensity shown in summary
 
 ---
 
@@ -174,6 +193,7 @@ Content-Type: application/json
 {
   "mood": "olahraga",
   "activity": "lari_cardio",
+  "intensity": "maximum",
   "limit": 20
 }
 ```
@@ -184,10 +204,11 @@ Content-Type: application/json
   "success": true,
   "mood": "olahraga",
   "activity": "lari_cardio",
+  "intensity": "maximum",
   "description": "Lagu cepat & energik buat lari",
   "filters_applied": {
-    "energy": [0.8, 1.0],
-    "tempo": [140, 180]
+    "energy": [0.9, 1.0],
+    "tempo": [168, 216]
   },
   "count": 234,
   "results": [
@@ -214,18 +235,18 @@ Content-Type: application/json
 curl http://localhost:5000/api/moods
 ```
 
-### **Test 2: Get Workout Recommendations**
+### **Test 2: Get Workout Recommendations (Maximum Intensity)**
 ```powershell
 curl -X POST http://localhost:5000/api/recommend `
   -H "Content-Type: application/json" `
-  -d '{\"mood\":\"olahraga\",\"activity\":\"lari_cardio\",\"limit\":10}'
+  -d '{\"mood\":\"olahraga\",\"activity\":\"lari_cardio\",\"intensity\":\"maximum\",\"limit\":10}'
 ```
 
-### **Test 3: Get Study Recommendations**
+### **Test 3: Get Study Recommendations (Calm)**
 ```powershell
 curl -X POST http://localhost:5000/api/recommend `
   -H "Content-Type: application/json" `
-  -d '{\"mood\":\"belajar\",\"activity\":\"fokus_maksimal\",\"limit\":10}'
+  -d '{\"mood\":\"belajar\",\"activity\":\"fokus_maksimal\",\"intensity\":\"calm\",\"limit\":10}'
 ```
 
 ---
@@ -290,8 +311,11 @@ curl -X POST http://localhost:5000/api/recommend `
 **Demo Step 2:**
 > "Lari atau gym? Saya pilih 'Lari/Cardio - Lagu cepat & energik'."
 
+**Demo Step 3:** ⭐ **NEW!**
+> "Seberapa intens? Saya mau maksimal - full power!"
+
 **Show Results:**
-> "Sistem langsung filter dari 1.2 juta tracks, dan memberikan 234 lagu yang match. Top recommendation: Blinding Lights - 92% match score karena cepat (171 BPM) dan energik."
+> "Sistem langsung filter dari 1.2 juta tracks dengan intensity adjustment. Base tempo 140-180 BPM, dikali 1.2x jadi 168-216 BPM. Energy dikali 1.3x. Result: 234 lagu yang match. Top recommendation: Blinding Lights - 92% match score."
 
 **Explain Algorithm:**
 > "Di belakang layar, sistem map 'Lari/Cardio' ke audio features: energy 0.8-1.0, tempo 140-180 BPM. Lalu scoring dengan weighted algorithm: 25% energy match, 25% tempo match, dll."
@@ -306,14 +330,18 @@ curl -X POST http://localhost:5000/api/recommend `
 After testing, verify:
 - [ ] All 8 moods clickable
 - [ ] Each mood shows 3-4 activities
-- [ ] "Lanjut" button works
-- [ ] "Kembali" button works
+- [ ] "Lanjut" button works (step 1→2)
+- [ ] "Lanjut" button works (step 2→3) ⭐ **NEW!**
+- [ ] 4 intensity levels visible
+- [ ] "Kembali" buttons work on all steps
 - [ ] Recommendations load (<2 seconds)
 - [ ] Results show 20 tracks
 - [ ] Match scores displayed
 - [ ] Natural descriptions visible
+- [ ] Intensity shown in summary
 - [ ] No technical jargon
 - [ ] Responsive UI
+- [ ] **3-step flow feels smooth**
 
 ---
 
