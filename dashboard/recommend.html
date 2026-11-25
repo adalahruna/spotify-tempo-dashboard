@@ -317,6 +317,7 @@
             <div class="step-indicator">
                 <div class="step active" id="step1">1</div>
                 <div class="step" id="step2">2</div>
+                <div class="step" id="step3">3</div>
             </div>
             
             <!-- Step 1: Select Mood -->
@@ -347,7 +348,43 @@
                 </div>
                 
                 <div class="navigation">
-                    <button class="btn btn-secondary" id="btnBack">← Kembali</button>
+                    <button class="btn btn-secondary" id="btnBackToMood">← Kembali</button>
+                    <button class="btn btn-primary" id="btnNextActivity" disabled>Lanjut →</button>
+                </div>
+            </div>
+            
+            <!-- Step 3: Intensity / Refinement -->
+            <div id="stepIntensity" class="step-content hidden">
+                <div class="question">
+                    <h2>Seberapa intens musiknya?</h2>
+                    <p>Pilih level energi yang kamu mau</p>
+                </div>
+                
+                <div class="options">
+                    <div class="option-card" data-intensity="calm" onclick="selectIntensity('calm', this)">
+                        <div class="emoji">😌</div>
+                        <div class="label">Pelan Banget</div>
+                        <div class="desc">Santai & tenang</div>
+                    </div>
+                    <div class="option-card" data-intensity="moderate" onclick="selectIntensity('moderate', this)">
+                        <div class="emoji">🙂</div>
+                        <div class="label">Sedang</div>
+                        <div class="desc">Enak didenger</div>
+                    </div>
+                    <div class="option-card" data-intensity="energetic" onclick="selectIntensity('energetic', this)">
+                        <div class="emoji">😄</div>
+                        <div class="label">Semangat</div>
+                        <div class="desc">Bikin excited</div>
+                    </div>
+                    <div class="option-card" data-intensity="maximum" onclick="selectIntensity('maximum', this)">
+                        <div class="emoji">🤩</div>
+                        <div class="label">Maksimal</div>
+                        <div class="desc">Full power!</div>
+                    </div>
+                </div>
+                
+                <div class="navigation">
+                    <button class="btn btn-secondary" id="btnBackToActivity">← Kembali</button>
                     <button class="btn btn-primary" id="btnGetRecommendations" disabled>Cari Lagu! 🎵</button>
                 </div>
             </div>
@@ -386,6 +423,7 @@
         // State
         let selectedMood = null;
         let selectedActivity = null;
+        let selectedIntensity = 'moderate'; // Default
         let moods = [];
         
         // Load moods on page load
@@ -447,6 +485,27 @@
             const mood = moods.find(m => m.id === selectedMood);
             document.getElementById('activityQuestion').textContent = getActivityQuestion(selectedMood);
             renderActivityOptions(mood.activities);
+        }
+        
+        function goToIntensityStep() {
+            // Update steps
+            document.getElementById('step2').classList.remove('active');
+            document.getElementById('step2').classList.add('completed');
+            document.getElementById('step3').classList.add('active');
+            
+            // Show intensity step
+            document.getElementById('stepActivity').classList.add('hidden');
+            document.getElementById('stepIntensity').classList.remove('hidden');
+            
+            // Reset intensity selection
+            document.querySelectorAll('#stepIntensity .option-card').forEach(el => {
+                el.classList.remove('selected');
+                if (el.dataset.intensity === 'moderate') {
+                    el.classList.add('selected');
+                }
+            });
+            selectedIntensity = 'moderate';
+            document.getElementById('btnGetRecommendations').disabled = false;
         }
         
         function getActivityQuestion(moodId) {
@@ -525,12 +584,24 @@
             // Select new
             element.classList.add('selected');
             selectedActivity = activityId;
+            document.getElementById('btnNextActivity').disabled = false;
+        }
+        
+        function selectIntensity(intensity, element) {
+            // Remove previous selection
+            document.querySelectorAll('#stepIntensity .option-card').forEach(el => {
+                el.classList.remove('selected');
+            });
+            
+            // Select new
+            element.classList.add('selected');
+            selectedIntensity = intensity;
             document.getElementById('btnGetRecommendations').disabled = false;
         }
         
         async function getRecommendations() {
             // Show loading
-            document.getElementById('stepActivity').classList.add('hidden');
+            document.getElementById('stepIntensity').classList.add('hidden');
             document.getElementById('loadingState').classList.remove('hidden');
             
             try {
@@ -540,6 +611,7 @@
                     body: JSON.stringify({
                         mood: selectedMood,
                         activity: selectedActivity,
+                        intensity: selectedIntensity,
                         limit: 20
                     })
                 });
@@ -550,12 +622,12 @@
                     displayResults(data);
                 } else {
                     alert('Error: ' + data.error);
-                    goBack();
+                    goBackToIntensity();
                 }
             } catch (error) {
                 console.error('Error getting recommendations:', error);
                 alert('Gagal mendapatkan rekomendasi. Pastikan API server berjalan!');
-                goBack();
+                goBackToIntensity();
             }
         }
         
@@ -564,18 +636,26 @@
             document.getElementById('loadingState').classList.add('hidden');
             
             // Update steps
-            document.getElementById('step2').classList.remove('active');
-            document.getElementById('step2').classList.add('completed');
+            document.getElementById('step3').classList.remove('active');
+            document.getElementById('step3').classList.add('completed');
             
             // Show results
             document.getElementById('stepResults').classList.add('active');
             
             // Render summary
             const mood = moods.find(m => m.id === data.mood);
+            const intensityLabels = {
+                'calm': '😌 Pelan Banget',
+                'moderate': '🙂 Sedang',
+                'energetic': '😄 Semangat',
+                'maximum': '🤩 Maksimal'
+            };
+            
             const summaryHTML = `
                 <p><strong>✨ Berdasarkan pilihan kamu:</strong></p>
                 <p>• ${mood.emoji} ${mood.label}</p>
                 <p>• ${data.description}</p>
+                <p>• Intensitas: ${intensityLabels[selectedIntensity]}</p>
                 <p><strong>📊 Ditemukan ${data.count} lagu</strong></p>
             `;
             document.getElementById('resultsSummary').innerHTML = summaryHTML;
@@ -614,7 +694,7 @@
             });
         }
         
-        function goBack() {
+        function goBackToMood() {
             // Update steps
             document.getElementById('step2').classList.remove('active');
             document.getElementById('step1').classList.remove('completed');
@@ -626,19 +706,39 @@
             
             // Reset activity selection
             selectedActivity = null;
-            document.getElementById('btnGetRecommendations').disabled = true;
+            document.getElementById('btnNextActivity').disabled = true;
+        }
+        
+        function goBackToActivity() {
+            // Update steps
+            document.getElementById('step3').classList.remove('active');
+            document.getElementById('step2').classList.remove('completed');
+            document.getElementById('step2').classList.add('active');
+            
+            // Show activity step
+            document.getElementById('stepIntensity').classList.add('hidden');
+            document.getElementById('stepActivity').classList.remove('hidden');
+        }
+        
+        function goBackToIntensity() {
+            // Show intensity step
+            document.getElementById('loadingState').classList.add('hidden');
+            document.getElementById('stepIntensity').classList.remove('hidden');
         }
         
         function restart() {
             // Reset state
             selectedMood = null;
             selectedActivity = null;
+            selectedIntensity = 'moderate';
             
             // Reset steps
             document.getElementById('step1').classList.add('active');
             document.getElementById('step1').classList.remove('completed');
             document.getElementById('step2').classList.remove('active');
             document.getElementById('step2').classList.remove('completed');
+            document.getElementById('step3').classList.remove('active');
+            document.getElementById('step3').classList.remove('completed');
             
             // Show mood step
             document.getElementById('stepResults').classList.remove('active');
@@ -653,7 +753,9 @@
         
         // Event listeners
         document.getElementById('btnNextMood').onclick = goToActivityStep;
-        document.getElementById('btnBack').onclick = goBack;
+        document.getElementById('btnBackToMood').onclick = goBackToMood;
+        document.getElementById('btnNextActivity').onclick = goToIntensityStep;
+        document.getElementById('btnBackToActivity').onclick = goBackToActivity;
         document.getElementById('btnGetRecommendations').onclick = getRecommendations;
         document.getElementById('btnRestart').onclick = restart;
         

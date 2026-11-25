@@ -320,6 +320,7 @@ def get_recommendations():
     {
         "mood": "olahraga",
         "activity": "lari_cardio",
+        "intensity": "maximum",  # calm, moderate, energetic, maximum
         "limit": 20
     }
     
@@ -329,6 +330,7 @@ def get_recommendations():
         data = request.json
         mood = data.get('mood')
         activity = data.get('activity')
+        intensity = data.get('intensity', 'moderate')
         limit = min(int(data.get('limit', 20)), 100)
         
         if not mood or not activity:
@@ -351,8 +353,36 @@ def get_recommendations():
             }), 400
         
         config = MOOD_MAPPINGS[mood][activity]
-        filters = config['filters']
+        filters = config['filters'].copy()  # Make a copy to modify
         description = config['description']
+        
+        # Apply intensity modifiers
+        intensity_modifiers = {
+            'calm': {'energy_mult': 0.7, 'tempo_mult': 0.85},
+            'moderate': {'energy_mult': 1.0, 'tempo_mult': 1.0},
+            'energetic': {'energy_mult': 1.15, 'tempo_mult': 1.1},
+            'maximum': {'energy_mult': 1.3, 'tempo_mult': 1.2}
+        }
+        
+        modifier = intensity_modifiers.get(intensity, intensity_modifiers['moderate'])
+        
+        # Adjust energy range based on intensity
+        if 'energy' in filters:
+            energy_min, energy_max = filters['energy']
+            # Scale but keep within 0-1 bounds
+            filters['energy'] = (
+                max(0.0, min(1.0, energy_min * modifier['energy_mult'])),
+                min(1.0, energy_max * modifier['energy_mult'])
+            )
+        
+        # Adjust tempo range based on intensity
+        if 'tempo' in filters:
+            tempo_min, tempo_max = filters['tempo']
+            # Scale tempo
+            filters['tempo'] = (
+                max(40, tempo_min * modifier['tempo_mult']),
+                min(200, tempo_max * modifier['tempo_mult'])
+            )
         
         # Build SQL query with weighted scoring
         conn = get_db_connection()
@@ -449,6 +479,7 @@ def get_recommendations():
             'success': True,
             'mood': mood,
             'activity': activity,
+            'intensity': intensity,
             'description': description,
             'filters_applied': filters,
             'count': len(results),
