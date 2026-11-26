@@ -827,9 +827,9 @@ function renderTopTracks() {
         return `
             <tr class="hover:bg-surface-container-low/50 transition-colors">
                 <td class="py-3 px-4 font-bold text-on-surface-variant">${i + 1}</td>
-                <td class="py-3 px-4 font-bold">${track.name || 'Track ' + (i+1)}</td>
-                <td class="py-3 px-4 text-on-surface-variant">${track.artists || 'Artist'}</td>
-                <td class="py-3 px-4 text-center text-on-surface-variant">${track.year || 2020}</td>
+                <td class="py-3 px-4 font-bold">${escapeHtml(track.name || 'Unknown Track')}</td>
+                <td class="py-3 px-4 text-on-surface-variant">${escapeHtml(track.artists || 'Unknown Artist')}</td>
+                <td class="py-3 px-4 text-center text-on-surface-variant">${track.year || '-'}</td>
                 <td class="py-3 px-4 text-center font-bold">${Math.round(track.tempo)} BPM</td>
                 <td class="py-3 px-4 text-center">
                     <div class="inline-flex items-center gap-1">
