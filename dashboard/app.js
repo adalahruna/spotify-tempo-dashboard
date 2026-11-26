@@ -734,8 +734,12 @@ async function loadTopTracksData() {
         
         if (response.ok) {
             const data = await response.json();
-            if (data.success && data.tracks) {
-                topTracksData = data.tracks;
+            if (data.success && data.results) {
+                topTracksData = data.results;
+                console.log('✅ Loaded real data from PostgreSQL');
+                // Hide mock data warning if exists
+                const warning = document.getElementById('mockDataWarning');
+                if (warning) warning.style.display = 'none';
             }
         }
     } catch (error) {
@@ -745,25 +749,70 @@ async function loadTopTracksData() {
     // If no data loaded, use mock data
     if (topTracksData.length === 0) {
         topTracksData = generateMockTopTracks();
+        console.warn('⚠️ Using mock data - API not available');
+        
+        // Show warning banner
+        showMockDataWarning();
     }
     
     renderTopTracks();
     console.log(`✅ Loaded ${topTracksData.length} top tracks`);
 }
 
+function showMockDataWarning() {
+    // Check if warning already exists
+    let warning = document.getElementById('mockDataWarning');
+    if (!warning) {
+        // Create warning banner
+        warning = document.createElement('div');
+        warning.id = 'mockDataWarning';
+        warning.className = 'bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4 mb-4 rounded-r-lg';
+        warning.innerHTML = `
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined">warning</span>
+                <div>
+                    <p class="font-bold">Using Mock Data</p>
+                    <p class="text-sm">API server not available. Displaying sample data with approximate release years. Start API server for real PostgreSQL data.</p>
+                </div>
+            </div>
+        `;
+        
+        // Insert before the table section
+        const topTracksSection = document.querySelector('[id*="topTracksSection"]') || 
+                                 document.querySelector('h2:has-text("Top Tracks")');
+        if (topTracksSection && topTracksSection.parentElement) {
+            topTracksSection.parentElement.insertBefore(warning, topTracksSection);
+        }
+    }
+    warning.style.display = 'block';
+}
+
 function generateMockTopTracks() {
-    const artists = ['Daft Punk', 'The Weeknd', 'Taylor Swift', 'Ed Sheeran', 'Billie Eilish', 'Drake', 'Ariana Grande', 'Post Malone', 'Bruno Mars', 'Olivia Rodrigo'];
-    const tracks = ['Get Lucky', 'Blinding Lights', 'Shake It Off', 'Shape of You', 'bad guy', 'One Dance', 'thank u, next', 'Circles', 'Uptown Funk', 'drivers license'];
+    // More accurate mock data with correct release years
+    const mockData = [
+        {name: 'Shake It Off', artists: 'Taylor Swift', year: 2014, tempo: 160, energy: 0.80, danceability: 0.65},
+        {name: 'Uptown Funk', artists: 'Bruno Mars', year: 2014, tempo: 115, energy: 0.80, danceability: 0.90},
+        {name: 'Get Lucky', artists: 'Daft Punk', year: 2013, tempo: 116, energy: 0.75, danceability: 0.93},
+        {name: 'Blinding Lights', artists: 'The Weeknd', year: 2019, tempo: 171, energy: 0.73, danceability: 0.51},
+        {name: 'Circles', artists: 'Post Malone', year: 2019, tempo: 120, energy: 0.76, danceability: 0.69},
+        {name: 'bad guy', artists: 'Billie Eilish', year: 2019, tempo: 135, energy: 0.43, danceability: 0.70},
+        {name: 'thank u, next', artists: 'Ariana Grande', year: 2019, tempo: 107, energy: 0.65, danceability: 0.65},
+        {name: 'One Dance', artists: 'Drake', year: 2016, tempo: 104, energy: 0.61, danceability: 0.79},
+        {name: 'Shape of You', artists: 'Ed Sheeran', year: 2017, tempo: 96, energy: 0.65, danceability: 0.83},
+        {name: 'drivers license', artists: 'Olivia Rodrigo', year: 2021, tempo: 144, energy: 0.42, danceability: 0.60},
+        {name: 'Levitating', artists: 'Dua Lipa', year: 2020, tempo: 103, energy: 0.70, danceability: 0.70},
+        {name: 'Save Your Tears', artists: 'The Weeknd', year: 2020, tempo: 118, energy: 0.68, danceability: 0.67},
+        {name: 'Watermelon Sugar', artists: 'Harry Styles', year: 2019, tempo: 95, energy: 0.82, danceability: 0.55},
+        {name: 'Peaches', artists: 'Justin Bieber', year: 2021, tempo: 90, energy: 0.60, danceability: 0.68},
+        {name: 'Good 4 U', artists: 'Olivia Rodrigo', year: 2021, tempo: 166, energy: 0.66, danceability: 0.56},
+        {name: 'Dynamite', artists: 'BTS', year: 2020, tempo: 114, energy: 0.84, danceability: 0.75},
+        {name: 'Heat Waves', artists: 'Glass Animals', year: 2020, tempo: 80, energy: 0.76, danceability: 0.76},
+        {name: 'Anti-Hero', artists: 'Taylor Swift', year: 2022, tempo: 97, energy: 0.64, danceability: 0.63},
+        {name: 'Flowers', artists: 'Miley Cyrus', year: 2023, tempo: 96, energy: 0.70, danceability: 0.69},
+        {name: 'As It Was', artists: 'Harry Styles', year: 2022, tempo: 174, energy: 0.70, danceability: 0.52}
+    ];
     
-    return Array.from({length: 50}, (_, i) => ({
-        name: tracks[i % tracks.length] + (i > 9 ? ` ${Math.floor(i/10)}` : ''),
-        artists: artists[i % artists.length],
-        year: 2015 + (i % 9),
-        tempo: 90 + Math.random() * 50,
-        energy: 0.5 + Math.random() * 0.5,
-        danceability: 0.5 + Math.random() * 0.5,
-        zone: Math.random() > 0.5 ? 'sweet-spot' : 'other'
-    }));
+    return mockData;
 }
 
 function filterTopTracks(filter) {
