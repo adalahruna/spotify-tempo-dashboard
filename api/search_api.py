@@ -94,19 +94,23 @@ def search_tracks():
     """
     Search tracks by name, artist, or tempo
     Query params:
-      - q: search query (name or artist)
+      - q: search query (name or artist) (optional)
       - tempo_min: minimum tempo (optional)
       - tempo_max: maximum tempo (optional)
+      - sort: sort by field (danceability, energy, tempo, year) (optional)
       - limit: max results (default: 20, max: 100)
     """
     try:
         query = request.args.get('q', '').strip()
         tempo_min = request.args.get('tempo_min', type=float)
         tempo_max = request.args.get('tempo_max', type=float)
+        sort_by = request.args.get('sort', 'danceability')  # Default sort
         limit = min(int(request.args.get('limit', 20)), 100)
         
-        if not query and tempo_min is None and tempo_max is None:
-            return jsonify({'error': 'Provide search query (q) or tempo range'}), 400
+        # Validate sort field
+        valid_sorts = ['danceability', 'energy', 'tempo', 'year', 'valence']
+        if sort_by not in valid_sorts:
+            sort_by = 'danceability'
         
         conn = get_db_connection()
         cur = conn.cursor()
@@ -142,7 +146,16 @@ def search_tracks():
             sql += " AND tempo <= %s"
             params.append(tempo_max)
         
-        sql += f" ORDER BY year DESC, danceability DESC LIMIT %s"
+        # Add ORDER BY based on sort parameter
+        if sort_by == 'year':
+            sql += f" ORDER BY year DESC NULLS LAST"
+        elif sort_by == 'tempo':
+            sql += f" ORDER BY tempo DESC"
+        else:
+            # For danceability, energy, valence - DESC order
+            sql += f" ORDER BY {sort_by} DESC, year DESC"
+        
+        sql += f" LIMIT %s"
         params.append(limit)
         
         cur.execute(sql, params)
@@ -154,6 +167,7 @@ def search_tracks():
         return jsonify({
             'success': True,
             'count': len(results),
+            'sort': sort_by,
             'results': results
         })
         
