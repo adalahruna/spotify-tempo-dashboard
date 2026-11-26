@@ -816,6 +816,13 @@ function renderTopTracks() {
         return 0;
     });
     
+    // Helper: Remove trailing numbers from track names (e.g. "One Dance 2" → "One Dance")
+    function cleanTrackName(name) {
+        if (!name) return 'Unknown Track';
+        // Remove pattern like " 1", " 2", " 3" at the end
+        return name.replace(/\s+\d+$/, '').trim() || name;
+    }
+    
     // Render rows
     tbody.innerHTML = filtered.slice(0, 20).map((track, i) => {
         const zone = track.tempo >= 100 && track.tempo <= 120 ? 'Sweet Spot' : 
@@ -827,7 +834,7 @@ function renderTopTracks() {
         return `
             <tr class="hover:bg-surface-container-low/50 transition-colors">
                 <td class="py-3 px-4 font-bold text-on-surface-variant">${i + 1}</td>
-                <td class="py-3 px-4 font-bold">${escapeHtml(track.name || 'Unknown Track')}</td>
+                <td class="py-3 px-4 font-bold">${escapeHtml(cleanTrackName(track.name))}</td>
                 <td class="py-3 px-4 text-on-surface-variant">${escapeHtml(track.artists || 'Unknown Artist')}</td>
                 <td class="py-3 px-4 text-center text-on-surface-variant">${track.year || '-'}</td>
                 <td class="py-3 px-4 text-center font-bold">${Math.round(track.tempo)} BPM</td>
