@@ -823,6 +823,23 @@ function renderTopTracks() {
         return name.replace(/\s+\d+$/, '').trim() || name;
     }
     
+    // Helper: Detect if track is a duplicate/different version
+    function getVersionLabel(track, allTracks) {
+        const sameName = allTracks.filter(t => 
+            cleanTrackName(t.name).toLowerCase() === cleanTrackName(track.name).toLowerCase() &&
+            t.artists.toLowerCase() === track.artists.toLowerCase()
+        );
+        
+        if (sameName.length > 1) {
+            // Multiple versions exist - label by year
+            const sorted = sameName.sort((a, b) => a.year - b.year);
+            const index = sorted.findIndex(t => t === track);
+            if (index === 0) return ' <span class="text-xs text-on-surface-variant ml-1">(Original)</span>';
+            return ` <span class="text-xs text-on-surface-variant ml-1">(${track.year})</span>`;
+        }
+        return '';
+    }
+    
     // Render rows
     tbody.innerHTML = filtered.slice(0, 20).map((track, i) => {
         const zone = track.tempo >= 100 && track.tempo <= 120 ? 'Sweet Spot' : 
@@ -830,11 +847,12 @@ function renderTopTracks() {
                      track.tempo < 100 ? 'Moderate' :
                      track.tempo < 140 ? 'Upbeat' : 'Fast';
         const zoneColor = zone === 'Sweet Spot' ? 'bg-primary text-on-primary' : 'bg-surface-container-low text-on-surface-variant';
+        const versionLabel = getVersionLabel(track, filtered);
         
         return `
             <tr class="hover:bg-surface-container-low/50 transition-colors">
                 <td class="py-3 px-4 font-bold text-on-surface-variant">${i + 1}</td>
-                <td class="py-3 px-4 font-bold">${escapeHtml(cleanTrackName(track.name))}</td>
+                <td class="py-3 px-4 font-bold">${escapeHtml(cleanTrackName(track.name))}${versionLabel}</td>
                 <td class="py-3 px-4 text-on-surface-variant">${escapeHtml(track.artists || 'Unknown Artist')}</td>
                 <td class="py-3 px-4 text-center text-on-surface-variant">${track.year || '-'}</td>
                 <td class="py-3 px-4 text-center font-bold">${Math.round(track.tempo)} BPM</td>
