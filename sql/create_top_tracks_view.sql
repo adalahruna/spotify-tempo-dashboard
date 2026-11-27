@@ -58,7 +58,6 @@ artist_matches AS (
         AND t.acousticness < 0.7
         AND t.duration_ms BETWEEN 120000 AND 360000
         AND t.tempo BETWEEN 60 AND 200
-)
 ),
 deduplicated AS (
     SELECT 
