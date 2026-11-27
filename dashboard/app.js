@@ -728,11 +728,12 @@ async function loadTopTracksData() {
     console.log('📊 Loading top tracks...');
     
     try {
-        // Try to load from API
+        // Try to load from API with top hits filter
         const API_URL = API_BASE_URL || 'http://localhost:5000/api';
-        console.log('🔗 Fetching from:', `${API_URL}/search/tracks?limit=100&sort=danceability`);
+        const url = `${API_URL}/search/tracks?limit=100&sort=popularity&top_hits=true`;
+        console.log('🔗 Fetching from:', url);
         
-        const response = await fetch(`${API_URL}/search/tracks?limit=100&sort=danceability`);
+        const response = await fetch(url);
         
         console.log('📡 Response status:', response.status, response.statusText);
         

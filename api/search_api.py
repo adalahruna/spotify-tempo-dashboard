@@ -99,6 +99,7 @@ def search_tracks():
       - tempo_max: maximum tempo (optional)
       - sort: sort by field (danceability, energy, tempo, year) (optional)
       - limit: max results (default: 20, max: 100)
+      - top_hits: if true, filters for likely popular tracks (optional)
     """
     try:
         query = request.args.get('q', '').strip()
@@ -106,9 +107,10 @@ def search_tracks():
         tempo_max = request.args.get('tempo_max', type=float)
         sort_by = request.args.get('sort', 'danceability')  # Default sort
         limit = min(int(request.args.get('limit', 20)), 100)
+        top_hits = request.args.get('top_hits', '').lower() == 'true'
         
         # Validate sort field
-        valid_sorts = ['danceability', 'energy', 'tempo', 'year', 'valence']
+        valid_sorts = ['danceability', 'energy', 'tempo', 'year', 'valence', 'popularity']
         if sort_by not in valid_sorts:
             sort_by = 'danceability'
         
@@ -126,11 +128,27 @@ def search_tracks():
                 CASE 
                     WHEN tempo >= 100 AND tempo < 120 THEN true
                     ELSE false
-                END as in_sweet_spot
+                END as in_sweet_spot,
+                -- Popularity proxy: combination of danceability, energy, and recency
+                (
+                    danceability * 0.4 + 
+                    energy * 0.3 + 
+                    (CASE WHEN year >= 2010 THEN (year - 2010) / 14.0 ELSE 0 END) * 0.3
+                ) as popularity_score
             FROM spotify_tracks_raw
             WHERE 1=1
         """
         params = []
+        
+        # Filter for top hits (likely popular tracks)
+        if top_hits:
+            sql += """ 
+                AND danceability > 0.6 
+                AND energy > 0.5
+                AND year >= 2010
+                AND instrumentalness < 0.3
+                AND speechiness < 0.3
+            """
         
         # Add search conditions
         if query:
@@ -147,10 +165,12 @@ def search_tracks():
             params.append(tempo_max)
         
         # Add ORDER BY based on sort parameter
-        if sort_by == 'year':
-            sql += f" ORDER BY year DESC NULLS LAST"
+        if sort_by == 'popularity':
+            sql += " ORDER BY popularity_score DESC, year DESC"
+        elif sort_by == 'year':
+            sql += " ORDER BY year DESC NULLS LAST"
         elif sort_by == 'tempo':
-            sql += f" ORDER BY tempo DESC"
+            sql += " ORDER BY tempo DESC"
         else:
             # For danceability, energy, valence - DESC order
             sql += f" ORDER BY {sort_by} DESC, year DESC"
@@ -168,6 +188,7 @@ def search_tracks():
             'success': True,
             'count': len(results),
             'sort': sort_by,
+            'top_hits_filter': top_hits,
             'results': results
         })
         
