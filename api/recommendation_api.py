@@ -466,7 +466,7 @@ def get_recommendations():
                     WHEN tempo BETWEEN 100 AND 120 THEN true
                     ELSE false
                 END as in_sweet_spot
-            FROM spotify_tracks_raw
+            FROM top_tracks_view
             WHERE 1=1
         """
         
@@ -484,10 +484,10 @@ def get_recommendations():
                 tolerance = 0.15
                 sql += f" AND {feature} BETWEEN {max(0, min_val - tolerance)} AND {min(1, max_val + tolerance)}"
         
-        # Optional: Filter by artist (fuzzy search)
+        # Optional: Filter by artist (exact or fuzzy search)
         query_params = []
         if artist_filter:
-            sql += " AND LOWER(artists) LIKE LOWER(%s)"
+            sql += " AND LOWER(matched_artist) LIKE LOWER(%s)"
             query_params.append(f"%{artist_filter}%")
         
         # Sort by: match_score DESC, sweet_spot bonus, year DESC
@@ -663,13 +663,13 @@ def search_artists():
         cur = conn.cursor()
         
         # Search artists using ILIKE (case-insensitive)
-        # Use DISTINCT to get unique artists
+        # Use DISTINCT to get unique artists from top_tracks_view
         sql = """
-            SELECT DISTINCT artists, COUNT(*) as track_count
-            FROM spotify_tracks_raw
-            WHERE LOWER(artists) LIKE LOWER(%s)
-            GROUP BY artists
-            ORDER BY track_count DESC, artists ASC
+            SELECT DISTINCT matched_artist as artist_name, COUNT(*) as track_count
+            FROM top_tracks_view
+            WHERE LOWER(matched_artist) LIKE LOWER(%s)
+            GROUP BY matched_artist
+            ORDER BY track_count DESC, matched_artist ASC
             LIMIT %s
         """
         
@@ -679,7 +679,7 @@ def search_artists():
         cur.close()
         conn.close()
         
-        artists = [{'name': row['artists'], 'track_count': row['track_count']} for row in results]
+        artists = [{'name': row['artist_name'], 'track_count': row['track_count']} for row in results]
         
         return jsonify({
             'success': True,
