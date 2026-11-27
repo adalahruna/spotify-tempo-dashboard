@@ -27,30 +27,26 @@ WITH popular_artists AS (
     ]) AS artist_name
 ),
 artist_matches AS (
-    -- Find tracks from popular artists with stricter matching
+    -- Find tracks from popular artists
+    -- Artists column format: "['Artist Name', 'Other Artist']"
     SELECT DISTINCT ON (t.id)
         t.*,
         pa.artist_name as matched_artist
     FROM spotify_tracks_raw t
     CROSS JOIN popular_artists pa
     WHERE 
-        -- Multiple conditions for better matching
+        -- Match artist name within the Python list string format
         (
-            -- Exact match
-            LOWER(t.artists) = LOWER(pa.artist_name)
+            -- Exact match: "['Artist Name']"
+            t.artists = '[''' || pa.artist_name || ''']'
             OR
-            -- Starts with artist name + separator
-            LOWER(t.artists) LIKE LOWER(pa.artist_name) || ',%'
+            -- First in list: "['Artist Name', ...]"
+            t.artists LIKE '[''' || pa.artist_name || ''', %'
             OR
-            LOWER(t.artists) LIKE LOWER(pa.artist_name) || ';%'
+            -- Middle/End in list: ..., 'Artist Name', ... or ..., 'Artist Name']
+            t.artists LIKE '%'', ''' || pa.artist_name || ''', %'
             OR
-            -- Artist is in a list (with separators)
-            LOWER(t.artists) LIKE '%,' || LOWER(pa.artist_name) || ',%'
-            OR
-            LOWER(t.artists) LIKE '%,' || LOWER(pa.artist_name)
-            OR
-            -- Bracket notation: ['Artist Name']
-            LOWER(t.artists) LIKE '%[''''' || LOWER(pa.artist_name) || ''''']%'
+            t.artists LIKE '%'', ''' || pa.artist_name || ''']'
         )
         AND t.year >= 2010
         AND t.year <= 2024
@@ -62,14 +58,6 @@ artist_matches AS (
         AND t.acousticness < 0.7
         AND t.duration_ms BETWEEN 120000 AND 360000
         AND t.tempo BETWEEN 60 AND 200
-        -- Filter out non-English tracks (Cyrillic, Chinese, Japanese, Korean)
-        AND NOT (t.name ~ '[А-Яа-яЁё]')
-        AND NOT (t.name ~ '[一-龥]')
-        AND NOT (t.name ~ '[ぁ-ん]')
-        AND NOT (t.name ~ '[가-힣]')
-        -- Also filter by track name - must have mostly ASCII characters
-        AND LENGTH(t.name) > 2
-        AND LENGTH(REGEXP_REPLACE(t.name, '[^A-Za-z0-9 ]', '', 'g')) > LENGTH(t.name) * 0.3
 )
 SELECT 
     id,
