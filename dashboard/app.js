@@ -917,10 +917,23 @@ function renderTopTracks() {
         const zoneColor = zone === 'Sweet Spot' ? 'bg-primary text-on-primary' : 'bg-surface-container-low text-on-surface-variant';
         const versionLabel = getVersionLabel(track, filtered);
         
+        // Generate YouTube search URL
+        const youtubeQuery = encodeURIComponent(`${cleanTrackName(track.name)} ${track.artists || ''} official`);
+        const youtubeUrl = `https://www.youtube.com/results?search_query=${youtubeQuery}`;
+        
         return `
             <tr class="hover:bg-surface-container-low/50 transition-colors">
                 <td class="py-3 px-4 font-bold text-on-surface-variant">${i + 1}</td>
-                <td class="py-3 px-4 font-bold">${escapeHtml(cleanTrackName(track.name))}${versionLabel}</td>
+                <td class="py-3 px-4">
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold">${escapeHtml(cleanTrackName(track.name))}${versionLabel}</span>
+                        <a href="${youtubeUrl}" target="_blank" rel="noopener noreferrer" 
+                           class="text-red-600 hover:text-red-700 transition-colors inline-flex items-center"
+                           title="Search on YouTube">
+                            <span class="material-symbols-outlined text-xl">play_circle</span>
+                        </a>
+                    </div>
+                </td>
                 <td class="py-3 px-4 text-on-surface-variant">${escapeHtml(track.artists || 'Unknown Artist')}</td>
                 <td class="py-3 px-4 text-center text-on-surface-variant">${track.year || '-'}</td>
                 <td class="py-3 px-4 text-center font-bold">${Math.round(track.tempo)} BPM</td>
