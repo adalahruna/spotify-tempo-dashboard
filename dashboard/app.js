@@ -728,9 +728,9 @@ async function loadTopTracksData() {
     console.log('📊 Loading top tracks...');
     
     try {
-        // Try to load from API with top hits filter
+        // Try to load from new top-tracks materialized view endpoint
         const API_URL = API_BASE_URL || 'http://localhost:5000/api';
-        const url = `${API_URL}/search/tracks?limit=100&sort=popularity&top_hits=true`;
+        const url = `${API_URL}/top-tracks?limit=100&sort=popularity`;
         console.log('🔗 Fetching from:', url);
         
         const response = await fetch(url);
@@ -743,7 +743,7 @@ async function loadTopTracksData() {
             
             if (data.success && data.results) {
                 topTracksData = data.results;
-                console.log('✅ Loaded real data from PostgreSQL:', topTracksData.length, 'tracks');
+                console.log('✅ Loaded from materialized view:', topTracksData.length, 'tracks');
                 // Hide mock data warning if exists
                 const warning = document.getElementById('mockDataWarning');
                 if (warning) warning.style.display = 'none';

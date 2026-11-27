@@ -220,7 +220,148 @@ def search_tracks():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@app.route('/api/search/artists', methods=['GET'])
+@app.route('/api/top-tracks', methods=['GET'])
+def get_top_tracks():
+    """
+    Get pre-computed top tracks from materialized view
+    Much faster and more accurate than on-the-fly filtering
+    
+    Query params:
+      - sort: sort by field (popularity, danceability, energy, year) (optional, default: popularity)
+      - artist: filter by specific artist (optional)
+      - zone: filter by tempo zone (sweet_spot, slow, moderate, upbeat, fast) (optional)
+      - limit: max results (default: 20, max: 200)
+    """
+    try:
+        sort_by = request.args.get('sort', 'popularity')
+        artist_filter = request.args.get('artist', '').strip()
+        zone_filter = request.args.get('zone', '').strip()
+        limit = min(int(request.args.get('limit', 20)), 200)
+        
+        # Validate sort field
+        valid_sorts = {
+            'popularity': 'popularity_score DESC',
+            'danceability': 'danceability DESC',
+            'energy': 'energy DESC',
+            'year': 'year DESC',
+            'tempo': 'tempo',
+            'hit_potential': 'hit_potential DESC'
+        }
+        
+        order_by = valid_sorts.get(sort_by, 'popularity_score DESC')
+        
+        conn = get_db_connection()
+        cur = conn.cursor()
+        
+        # Build query from materialized view
+        sql = """
+            SELECT 
+                id, name, artists, year, tempo,
+                danceability, energy, valence,
+                acousticness, instrumentalness,
+                liveness, speechiness, loudness,
+                duration_ms, matched_artist,
+                tempo_zone, in_sweet_spot,
+                ROUND(popularity_score::numeric, 4) as popularity_score,
+                ROUND(hit_potential::numeric, 4) as hit_potential
+            FROM top_tracks_view
+            WHERE 1=1
+        """
+        params = []
+        
+        # Optional filters
+        if artist_filter:
+            sql += " AND LOWER(matched_artist) = LOWER(%s)"
+            params.append(artist_filter)
+        
+        if zone_filter:
+            sql += " AND tempo_zone = %s"
+            params.append(zone_filter)
+        
+        sql += f" ORDER BY {order_by} LIMIT %s"
+        params.append(limit)
+        
+        cur.execute(sql, params)
+        results = cur.fetchall()
+        
+        cur.close()
+        conn.close()
+        
+        return jsonify({
+            'success': True,
+            'count': len(results),
+            'sort': sort_by,
+            'filters': {
+                'artist': artist_filter if artist_filter else None,
+                'zone': zone_filter if zone_filter else None
+            },
+            'results': results
+        })
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/top-tracks/stats', methods=['GET'])
+def get_top_tracks_stats():
+    """Get statistics about top tracks materialized view"""
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+        
+        # Get overall stats
+        cur.execute("""
+            SELECT 
+                COUNT(*) as total_tracks,
+                COUNT(DISTINCT matched_artist) as unique_artists,
+                MIN(year) as earliest_year,
+                MAX(year) as latest_year,
+                ROUND(AVG(popularity_score)::numeric, 3) as avg_popularity,
+                COUNT(*) FILTER (WHERE in_sweet_spot) as sweet_spot_tracks,
+                ROUND(AVG(tempo)::numeric, 1) as avg_tempo,
+                ROUND(AVG(danceability)::numeric, 3) as avg_danceability,
+                ROUND(AVG(energy)::numeric, 3) as avg_energy
+            FROM top_tracks_view
+        """)
+        stats = cur.fetchone()
+        
+        # Get top artists by track count
+        cur.execute("""
+            SELECT 
+                matched_artist,
+                COUNT(*) as track_count,
+                ROUND(AVG(popularity_score)::numeric, 3) as avg_score
+            FROM top_tracks_view
+            GROUP BY matched_artist
+            ORDER BY track_count DESC
+            LIMIT 10
+        """)
+        top_artists = cur.fetchall()
+        
+        # Get zone distribution
+        cur.execute("""
+            SELECT 
+                tempo_zone,
+                COUNT(*) as count,
+                ROUND((COUNT(*) * 100.0 / SUM(COUNT(*)) OVER())::numeric, 2) as percentage
+            FROM top_tracks_view
+            GROUP BY tempo_zone
+            ORDER BY count DESC
+        """)
+        zones = cur.fetchall()
+        
+        cur.close()
+        conn.close()
+        
+        return jsonify({
+            'success': True,
+            'stats': stats,
+            'top_artists': top_artists,
+            'tempo_zones': zones
+        })
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 def search_artists():
     """
     Search tracks by specific artist
