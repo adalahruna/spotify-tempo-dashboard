@@ -129,25 +129,50 @@ def search_tracks():
                     WHEN tempo >= 100 AND tempo < 120 THEN true
                     ELSE false
                 END as in_sweet_spot,
-                -- Popularity proxy: combination of danceability, energy, and recency
+                -- Popularity proxy: combination of features + balance
                 (
-                    danceability * 0.4 + 
-                    energy * 0.3 + 
-                    (CASE WHEN year >= 2010 THEN (year - 2010) / 14.0 ELSE 0 END) * 0.3
+                    danceability * 0.35 + 
+                    energy * 0.35 + 
+                    valence * 0.15 +
+                    (1 - acousticness) * 0.10 +
+                    (CASE WHEN year >= 2010 THEN (year - 2010) / 14.0 ELSE 0 END) * 0.05
                 ) as popularity_score
             FROM spotify_tracks_raw
             WHERE 1=1
         """
         params = []
         
-        # Filter for top hits (likely popular tracks)
+        # Filter for top hits (much stricter criteria)
         if top_hits:
+            # List of popular artists (mainstream acts)
+            popular_artists = [
+                'Drake', 'Taylor Swift', 'Ed Sheeran', 'The Weeknd', 'Ariana Grande',
+                'Post Malone', 'Billie Eilish', 'Justin Bieber', 'Dua Lipa', 'Harry Styles',
+                'Bruno Mars', 'Daft Punk', 'Calvin Harris', 'Rihanna', 'Beyoncé',
+                'Adele', 'Coldplay', 'Maroon 5', 'Imagine Dragons', 'OneRepublic',
+                'Sia', 'Katy Perry', 'Lady Gaga', 'Sam Smith', 'Shawn Mendes',
+                'Khalid', 'Halsey', 'Camila Cabello', 'Olivia Rodrigo', 'BTS',
+                'Bad Bunny', 'J Balvin', 'The Chainsmokers', 'Marshmello', 'David Guetta',
+                'Avicii', 'Martin Garrix', 'Zedd', 'Kygo', 'Ellie Goulding',
+                'Miley Cyrus', 'Selena Gomez', 'Jonas Brothers', 'Charlie Puth', 'Troye Sivan'
+            ]
+            
+            # Build artist filter with ILIKE for case-insensitive partial matching
+            artist_conditions = " OR ".join([f"LOWER(artists) LIKE %s" for _ in popular_artists])
+            sql += f" AND ({artist_conditions})"
+            params.extend([f"%{artist.lower()}%" for artist in popular_artists])
+            
+            # Additional quality filters
             sql += """ 
-                AND danceability > 0.6 
-                AND energy > 0.5
+                AND danceability > 0.5
+                AND energy > 0.4
+                AND valence > 0.2
                 AND year >= 2010
-                AND instrumentalness < 0.3
-                AND speechiness < 0.3
+                AND year <= 2024
+                AND instrumentalness < 0.5
+                AND speechiness < 0.4
+                AND acousticness < 0.7
+                AND duration_ms BETWEEN 120000 AND 360000
             """
         
         # Add search conditions
