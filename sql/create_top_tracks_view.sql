@@ -63,6 +63,8 @@ artist_matches AS (
         AND t.name NOT SIMILAR TO '%[Rr]emaster%'
         AND t.name NOT SIMILAR TO '%[Rr]efix%'
         AND t.name NOT SIMILAR TO '% - %[Mm]ix%'
+        AND t.name NOT SIMILAR TO '%\[[Mm]ixed%'
+        AND t.name NOT SIMILAR TO '%[Ee]dit%'
         AND t.name NOT SIMILAR TO '%[Ll]ive%'
         AND t.name NOT SIMILAR TO '%[Aa]coustic%'
         AND t.name NOT SIMILAR TO '%\([Ff]eat%'
