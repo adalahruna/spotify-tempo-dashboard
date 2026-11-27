@@ -59,50 +59,73 @@ artist_matches AS (
         AND t.duration_ms BETWEEN 120000 AND 360000
         AND t.tempo BETWEEN 60 AND 200
 )
+),
+deduplicated AS (
+    SELECT 
+        id,
+        name,
+        artists,
+        year,
+        tempo,
+        danceability,
+        energy,
+        valence,
+        acousticness,
+        instrumentalness,
+        liveness,
+        speechiness,
+        loudness,
+        duration_ms,
+        matched_artist,
+        -- Tempo zone classification
+        CASE 
+            WHEN tempo >= 100 AND tempo < 120 THEN 'sweet_spot'
+            WHEN tempo < 80 THEN 'slow'
+            WHEN tempo >= 80 AND tempo < 100 THEN 'moderate'
+            WHEN tempo >= 120 AND tempo < 140 THEN 'upbeat'
+            ELSE 'fast'
+        END as tempo_zone,
+        -- Boolean for sweet spot
+        CASE 
+            WHEN tempo >= 100 AND tempo < 120 THEN true
+            ELSE false
+        END as in_sweet_spot,
+        -- Popularity score calculation
+        (
+            danceability * 0.35 +           -- Dance appeal (35%)
+            energy * 0.30 +                 -- Energy level (30%)
+            valence * 0.15 +                -- Mood positivity (15%)
+            (1 - acousticness) * 0.10 +     -- Production quality (10%)
+            (year - 2010) / 14.0 * 0.10     -- Recency factor (10%)
+        ) as popularity_score,
+        -- Hit potential score (for ML features)
+        (
+            POWER(danceability * energy, 0.5) * 0.6 +
+            valence * 0.2 +
+            (1 - instrumentalness) * 0.2
+        ) as hit_potential,
+        -- Row number for deduplication (keep track with highest score per name+artist)
+        ROW_NUMBER() OVER (
+            PARTITION BY 
+                -- Normalize track name (remove remix info, case insensitive)
+                LOWER(REGEXP_REPLACE(name, '\s*\(.*\)|\s*\[.*\]|-\s*.*Remix.*|-\s*.*Remaster.*', '', 'gi')),
+                matched_artist
+            ORDER BY 
+                (danceability * 0.35 + energy * 0.30 + valence * 0.15 + (1 - acousticness) * 0.10 + (year - 2010) / 14.0 * 0.10) DESC,
+                year DESC
+        ) as row_num
+    FROM artist_matches
+)
 SELECT 
-    id,
-    name,
-    artists,
-    year,
-    tempo,
-    danceability,
-    energy,
-    valence,
-    acousticness,
-    instrumentalness,
-    liveness,
-    speechiness,
-    loudness,
-    duration_ms,
-    matched_artist,
-    -- Tempo zone classification
-    CASE 
-        WHEN tempo >= 100 AND tempo < 120 THEN 'sweet_spot'
-        WHEN tempo < 80 THEN 'slow'
-        WHEN tempo >= 80 AND tempo < 100 THEN 'moderate'
-        WHEN tempo >= 120 AND tempo < 140 THEN 'upbeat'
-        ELSE 'fast'
-    END as tempo_zone,
-    -- Boolean for sweet spot
-    CASE 
-        WHEN tempo >= 100 AND tempo < 120 THEN true
-        ELSE false
-    END as in_sweet_spot,
-    -- Popularity score calculation
-    (
-        danceability * 0.35 +           -- Dance appeal (35%)
-        energy * 0.30 +                 -- Energy level (30%)
-        valence * 0.15 +                -- Mood positivity (15%)
-        (1 - acousticness) * 0.10 +     -- Production quality (10%)
-        (year - 2010) / 14.0 * 0.10     -- Recency factor (10%)
-    ) as popularity_score,
-    -- Hit potential score (for ML features)
-    (
-        POWER(danceability * energy, 0.5) * 0.6 +
-        valence * 0.2 +
-        (1 - instrumentalness) * 0.2
-    ) as hit_potential
-FROM artist_matches
+    id, name, artists, year, tempo,
+    danceability, energy, valence,
+    acousticness, instrumentalness,
+    liveness, speechiness, loudness,
+    duration_ms, matched_artist,
+    tempo_zone, in_sweet_spot,
+    popularity_score, hit_potential
+FROM deduplicated
+WHERE row_num = 1
 ORDER BY popularity_score DESC;
 
 -- Create indexes for performance
