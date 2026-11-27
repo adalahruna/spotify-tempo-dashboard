@@ -730,20 +730,38 @@ async function loadTopTracksData() {
     try {
         // Try to load from API
         const API_URL = API_BASE_URL || 'http://localhost:5000/api';
+        console.log('🔗 Fetching from:', `${API_URL}/search/tracks?limit=100&sort=danceability`);
+        
         const response = await fetch(`${API_URL}/search/tracks?limit=100&sort=danceability`);
+        
+        console.log('📡 Response status:', response.status, response.statusText);
         
         if (response.ok) {
             const data = await response.json();
+            console.log('📦 Response data:', data);
+            
             if (data.success && data.results) {
                 topTracksData = data.results;
-                console.log('✅ Loaded real data from PostgreSQL');
+                console.log('✅ Loaded real data from PostgreSQL:', topTracksData.length, 'tracks');
                 // Hide mock data warning if exists
                 const warning = document.getElementById('mockDataWarning');
                 if (warning) warning.style.display = 'none';
+                
+                renderTopTracks();
+                console.log(`✅ Loaded ${topTracksData.length} top tracks`);
+                return; // Exit early on success
+            } else {
+                console.warn('⚠️ API response missing expected data:', data);
             }
+        } else {
+            console.error('❌ API returned error status:', response.status);
+            const errorText = await response.text();
+            console.error('Error details:', errorText);
         }
     } catch (error) {
-        console.warn('⚠️ Failed to load from API, using mock data:', error);
+        console.error('❌ Failed to load from API:', error);
+        console.error('Error name:', error.name);
+        console.error('Error message:', error.message);
     }
     
     // If no data loaded, use mock data
