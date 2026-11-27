@@ -58,6 +58,23 @@ artist_matches AS (
         AND t.acousticness < 0.7
         AND t.duration_ms BETWEEN 120000 AND 360000
         AND t.tempo BETWEEN 60 AND 200
+        -- Filter out remixes, live versions, and features in track name
+        AND t.name NOT SIMILAR TO '%[Rr]emix%'
+        AND t.name NOT SIMILAR TO '%[Rr]emaster%'
+        AND t.name NOT SIMILAR TO '%[Rr]efix%'
+        AND t.name NOT SIMILAR TO '% - %[Mm]ix%'
+        AND t.name NOT SIMILAR TO '%[Ll]ive%'
+        AND t.name NOT SIMILAR TO '%[Aa]coustic%'
+        AND t.name NOT SIMILAR TO '%\([Ff]eat%'
+        AND t.name NOT SIMILAR TO '%\([Ww]ith%'
+        -- Filter out explicit/clean versions markers
+        AND t.name NOT SIMILAR TO '%[Ee]xplicit%'
+        AND t.name NOT SIMILAR TO '%[Cc]lean%'
+        -- Filter out demo/instrumental versions
+        AND t.name NOT SIMILAR TO '%[Dd]emo%'
+        AND t.name NOT SIMILAR TO '%[Ii]nstrumental%'
+        -- Prefer songs with ASCII-friendly names (English)
+        AND LENGTH(REGEXP_REPLACE(t.name, '[^A-Za-z0-9 ''\-\(\)]', '', 'g')) > LENGTH(t.name) * 0.7
 ),
 deduplicated AS (
     SELECT 
